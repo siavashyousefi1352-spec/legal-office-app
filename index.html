@@ -52,6 +52,25 @@ input,select,textarea{width:100%;margin-top:5px;border:1px solid #c8d2db;border-
   </div>
 </section>
 
+
+<section id="recoveryScreen" class="login-screen hidden">
+  <div class="login-card">
+    <div class="logo">🔐</div>
+    <h1>تعیین رمز عبور جدید</h1>
+    <p class="muted">رمز جدید حساب سامانه را وارد کنید.</p>
+    <form id="recoveryForm" class="form-grid">
+      <label class="wide">رمز جدید
+        <input name="password" type="password" minlength="8" required autocomplete="new-password">
+      </label>
+      <label class="wide">تکرار رمز جدید
+        <input name="password2" type="password" minlength="8" required autocomplete="new-password">
+      </label>
+      <div class="wide"><button class="primary fullbtn">ذخیره رمز جدید</button></div>
+    </form>
+    <div class="hint">رمز حداقل ۸ کاراکتر باشد. پس از ذخیره، با همین رمز روی لپ‌تاپ و گوشی وارد شوید.</div>
+  </div>
+</section>
+
 <div id="app" class="hidden">
 <header>
   <div><h1 id="brandTitle">⚖️ سامانه جامع مدیریت موسسه حقوقی</h1><small id="currentUserLabel"></small></div>
@@ -330,10 +349,66 @@ function doSearch(){
  searchResults.innerHTML=out.join('')||empty();
 }
 
-sb.auth.onAuthStateChange((event,session)=>{if(event==='SIGNED_OUT'){document.getElementById('app').classList.add('hidden');document.getElementById('loginScreen').classList.remove('hidden')}});
+
+let recoveryMode = false;
+
+function showRecoveryScreen(){
+  recoveryMode = true;
+  document.getElementById('loginScreen').classList.add('hidden');
+  document.getElementById('app').classList.add('hidden');
+  document.getElementById('recoveryScreen').classList.remove('hidden');
+}
+
+document.getElementById('recoveryForm').onsubmit = async (e) => {
+  e.preventDefault();
+  const f = formData(e.target);
+  if ((f.password || '').length < 8) {
+    toast('رمز باید حداقل ۸ کاراکتر باشد');
+    return;
+  }
+  if (f.password !== f.password2) {
+    toast('تکرار رمز با رمز جدید یکسان نیست');
+    return;
+  }
+  try {
+    e.target.classList.add('loading');
+    const { error } = await sb.auth.updateUser({ password: f.password });
+    if (error) throw error;
+    toast('رمز جدید با موفقیت ذخیره شد');
+    recoveryMode = false;
+    document.getElementById('recoveryScreen').classList.add('hidden');
+    await bootApp();
+  } catch (err) {
+    toast('تغییر رمز انجام نشد: ' + (err.message || err));
+  } finally {
+    e.target.classList.remove('loading');
+  }
+};
+
+sb.auth.onAuthStateChange((event,session)=>{
+  if(event==='PASSWORD_RECOVERY'){
+    showRecoveryScreen();
+    return;
+  }
+  if(event==='SIGNED_OUT'){
+    recoveryMode=false;
+    document.getElementById('recoveryScreen').classList.add('hidden');
+    document.getElementById('app').classList.add('hidden');
+    document.getElementById('loginScreen').classList.remove('hidden');
+  }
+});
 
 if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
-bootApp().catch(err=>{toast(err.message||err);document.getElementById('loginScreen').classList.remove('hidden')});
+
+setTimeout(()=>{
+  if(!recoveryMode){
+    bootApp().catch(err=>{
+      toast(err.message||err);
+      document.getElementById('loginScreen').classList.remove('hidden');
+    });
+  }
+}, 700);
+
 </script>
 </body>
 </html>

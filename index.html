@@ -151,7 +151,7 @@ const TABLES = {
 function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
 function money(n){return Number(n||0).toLocaleString('fa-IR')}
 function toast(msg){let e=document.getElementById('toast');e.textContent=msg;e.style.display='block';clearTimeout(window._toast);window._toast=setTimeout(()=>e.style.display='none',2500)}
-function roleName(r){return ({admin:'مدیر',lawyer:'وکیل',accountant:'حسابدار',secretary:'منشی'})[r]||r||'-'}
+function roleName(r){return ({admin:'مدیر',internal_manager:'مدیر داخلی',lawyer:'وکیل',accountant:'حسابدار',secretary:'منشی'})[r]||r||'-'}
 function find(kind,id){return data[kind].find(x=>x.id===id)}
 function clientName(id){return find('clients',id)?.full_name||'-'}
 function lawyerName(id){return find('lawyers',id)?.full_name||'-'}
@@ -166,14 +166,28 @@ function can(view){
  if(!profile)return false;
  if(profile.role==='admin')return true;
  const p={
+   internal_manager:['dashboard','clients','lawyers','cases','deadlines','tasks','timeline','documents','search'],
    lawyer:['dashboard','clients','lawyers','cases','deadlines','tasks','timeline','documents','search'],
    accountant:['dashboard','clients','contracts','payments','checks','expenses','reports','search'],
    secretary:['dashboard','clients','lawyers','cases','deadlines','tasks','timeline','documents','search']
  };
  return (p[profile.role]||[]).includes(view);
 }
-function canWrite(kind){
- if(!profile)return false;if(profile.role==='admin')return true;
+
+function canAdd(kind){
+ if(!profile)return false;
+ if(profile.role==='admin')return true;
+ if(profile.role==='internal_manager')return ['clients','lawyers','cases','deadlines','tasks','timeline','documents'].includes(kind);
+ if(profile.role==='lawyer')return ['clients','cases','deadlines','tasks','timeline','documents'].includes(kind);
+ if(profile.role==='accountant')return ['clients','contracts','payments','checks','expenses'].includes(kind);
+ if(profile.role==='secretary')return ['clients','lawyers','cases','deadlines','tasks','timeline','documents'].includes(kind);
+ return false;
+}
+
+function canEdit(kind){
+ if(!profile)return false;
+ if(profile.role==='admin')return true;
+ if(profile.role==='internal_manager')return false;
  if(profile.role==='lawyer')return ['clients','cases','deadlines','tasks','timeline','documents'].includes(kind);
  if(profile.role==='accountant')return ['clients','contracts','payments','checks','expenses'].includes(kind);
  if(profile.role==='secretary')return ['clients','lawyers','cases','deadlines','tasks','timeline','documents'].includes(kind);
@@ -181,7 +195,12 @@ function canWrite(kind){
 }
 function canDelete(){return profile?.role==='admin'}
 
-function applyPermissions(){document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('nav-hidden',!can(b.dataset.view)))}
+function applyPermissions(){
+ document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('nav-hidden',!can(b.dataset.view)));
+ const financialIds=['sContracts','sContractValue','sPaid','sReceivable','sChecks','sExpenses'];
+ const financeAllowed=['admin','accountant'].includes(profile?.role);
+ financialIds.forEach(id=>{const el=document.getElementById(id);if(el&&el.parentElement)el.parentElement.classList.toggle('hidden',!financeAllowed)});
+}
 function showView(v){
  if(!can(v)){toast('دسترسی این بخش برای شما فعال نیست');return}
  currentView=v;document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));document.getElementById(v).classList.add('active');
@@ -270,8 +289,10 @@ function cleanPayload(kind,o){
  o.created_by=currentUser.id; return o;
 }
 async function bindSave(kind,form){
- if(!canWrite(kind)){toast('دسترسی ثبت/ویرایش ندارید');return}
- const o=formData(form),edit=o.editId;cleanPayload(kind,o);delete o.created_by;
+ const o=formData(form),edit=o.editId;
+ if(edit && !canEdit(kind)){toast('این سطح دسترسی اجازه ویرایش ندارد');return}
+ if(!edit && !canAdd(kind)){toast('دسترسی افزودن در این بخش ندارید');return}
+ cleanPayload(kind,o);delete o.created_by;
  let r;
  if(edit)r=await sb.from(TABLES[kind]).update(o).eq('id',edit);
  else r=await sb.from(TABLES[kind]).insert({...o,created_by:currentUser.id});
@@ -287,7 +308,7 @@ function editRecord(kind,id){
  const x=find(kind,id),map={clients:'clientsForm',lawyers:'lawyersForm',cases:'casesForm',contracts:'contractsForm',payments:'paymentsForm',checks:'checksForm',expenses:'expensesForm',deadlines:'deadlinesForm',tasks:'tasksForm',timeline:'timelineForm'},f=document.getElementById(map[kind]);if(!x||!f)return;
  Object.entries(x).forEach(([k,v])=>{if(f.elements[k])f.elements[k].value=v??''});f.elements.editId.value=id;showView(kind==='timeline'?'timeline':kind);window.scrollTo({top:0,behavior:'smooth'});
 }
-function buttons(kind,id){return `<div class="actions">${canWrite(kind)?`<button class="secondary" onclick="editRecord('${kind}','${id}')">ویرایش</button>`:''}${canDelete()?`<button class="danger" onclick="deleteRecord('${kind}','${id}')">حذف</button>`:''}</div>`}
+function buttons(kind,id){return `<div class="actions">${canEdit(kind)?`<button class="secondary" onclick="editRecord('${kind}','${id}')">ویرایش</button>`:''}${canDelete()?`<button class="danger" onclick="deleteRecord('${kind}','${id}')">حذف</button>`:''}</div>`}
 
 function renderClients(){let qv=(document.getElementById('clientsQ')?.value||'').toLowerCase(),a=data.clients.filter(x=>JSON.stringify(x).toLowerCase().includes(qv));document.getElementById('clientsList').innerHTML=a.map(x=>`<div class="item"><div class="title">${esc(x.full_name)}</div><div class="meta">کد ملی: ${esc(x.national_id||'-')} | تلفن: ${esc(x.phone||'-')}<br>${esc(x.address||'')}</div>${buttons('clients',x.id)}</div>`).join('')||empty()}
 function renderLawyers(){document.getElementById('lawyersList').innerHTML=data.lawyers.map(x=>`<div class="item"><div class="title">${esc(x.full_name)}</div><div class="meta">پروانه: ${esc(x.license_no||'-')} | تلفن: ${esc(x.phone||'-')} | سهم: ${esc(x.share_percent||0)}٪</div>${buttons('lawyers',x.id)}</div>`).join('')||empty()}
@@ -302,7 +323,7 @@ function renderTasks(){document.getElementById('tasksList').innerHTML=data.tasks
 function renderTimeline(){let f=document.getElementById('timelineFilter')?.value||'',a=data.timeline.filter(x=>!f||x.case_id===f);document.getElementById('timelineList').innerHTML=a.map(x=>`<div class="item"><div class="title">${esc(x.event_date||'-')} — ${esc(x.event_type||'رویداد')}</div><div class="meta">پرونده: ${esc(caseName(x.case_id))}<br>${esc(x.description||'')}</div>${buttons('timeline',x.id)}</div>`).join('')||empty()}
 
 async function saveDocument(e){
- e.preventDefault();if(!canWrite('documents')){toast('دسترسی بارگذاری سند ندارید');return}
+ e.preventDefault();if(!canAdd('documents')){toast('دسترسی بارگذاری سند ندارید');return}
  const f=e.target,file=document.getElementById('docFile').files[0];if(!file){toast('فایل انتخاب نشده');return}
  const d=formData(f),ext=file.name.includes('.')?'.'+file.name.split('.').pop():'',path=`${currentUser.id}/${Date.now()}_${Math.random().toString(36).slice(2)}${ext}`;
  try{
@@ -333,7 +354,7 @@ function renderReports(){
 }
 function renderUsers(){
  if(!can('users'))return;
- usersList.innerHTML=data.profiles.map(x=>`<div class="item"><div class="row"><div class="title">${esc(x.full_name||x.id)}</div>${statusBadge(x.active?'فعال':'غیرفعال')}</div><div class="meta">نقش: ${esc(roleName(x.role))}</div>${profile.role==='admin'?`<div class="actions"><select id="role_${x.id}" style="max-width:180px"><option value="admin" ${x.role==='admin'?'selected':''}>مدیر</option><option value="lawyer" ${x.role==='lawyer'?'selected':''}>وکیل</option><option value="accountant" ${x.role==='accountant'?'selected':''}>حسابدار</option><option value="secretary" ${x.role==='secretary'?'selected':''}>منشی</option></select><button class="secondary" onclick="saveRole('${x.id}')">ذخیره نقش</button>${x.id!==currentUser.id?`<button class="${x.active?'danger':'primary'}" onclick="toggleUser('${x.id}',${!x.active})">${x.active?'غیرفعال':'فعال'} کردن</button>`:''}</div>`:''}</div>`).join('')||empty();
+ usersList.innerHTML=data.profiles.map(x=>`<div class="item"><div class="row"><div class="title">${esc(x.full_name||x.id)}</div>${statusBadge(x.active?'فعال':'غیرفعال')}</div><div class="meta">نقش: ${esc(roleName(x.role))}</div>${profile.role==='admin'?`<div class="actions"><select id="role_${x.id}" style="max-width:180px"><option value="admin" ${x.role==='admin'?'selected':''}>مدیر</option><option value="internal_manager" ${x.role==='internal_manager'?'selected':''}>مدیر داخلی</option><option value="lawyer" ${x.role==='lawyer'?'selected':''}>وکیل</option><option value="accountant" ${x.role==='accountant'?'selected':''}>حسابدار</option><option value="secretary" ${x.role==='secretary'?'selected':''}>منشی</option></select><button class="secondary" onclick="saveRole('${x.id}')">ذخیره نقش</button>${x.id!==currentUser.id?`<button class="${x.active?'danger':'primary'}" onclick="toggleUser('${x.id}',${!x.active})">${x.active?'غیرفعال':'فعال'} کردن</button>`:''}</div>`:''}</div>`).join('')||empty();
 }
 async function saveRole(id){let role=document.getElementById('role_'+id).value;let {error}=await sb.from('profiles').update({role}).eq('id',id);if(error){toast(error.message);return}await loadAll(false);toast('نقش کاربر تغییر کرد')}
 async function toggleUser(id,active){let {error}=await sb.from('profiles').update({active}).eq('id',id);if(error){toast(error.message);return}await loadAll(false)}

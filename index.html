@@ -1,0 +1,677 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#172433">
+<title>سامانه جامع مدیریت موسسه حقوقی - نسخه نهایی آفلاین</title>
+<style>
+
+:root{--bg:#f4f6f8;--card:#fff;--text:#1b2733;--muted:#6a7886;--primary:#155fa0;--primary2:#0e4d83;--danger:#b42318;--ok:#18794e;--warn:#9a6700;--line:#e1e7ec}
+*{box-sizing:border-box}html{font-size:15px}body{margin:0;font-family:Tahoma,Arial,sans-serif;background:var(--bg);color:var(--text)}
+.hidden{display:none!important}.login-screen{min-height:100vh;display:grid;place-items:center;padding:18px;background:linear-gradient(135deg,#172433,#254867)}
+.login-card{width:min(460px,100%);background:#fff;border-radius:20px;padding:28px;box-shadow:0 18px 45px #0004}.logo{font-size:42px;text-align:center}.login-card h1{text-align:center;font-size:21px}.muted{color:var(--muted)}.hint{font-size:12px;margin-top:14px;padding:10px;background:#f5f7fa;border-radius:10px}
+header{position:sticky;top:0;z-index:20;background:#172433;color:#fff;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px;box-shadow:0 2px 10px #0003}
+header h1{font-size:17px;margin:0 0 3px}header small{opacity:.78}.header-actions{display:flex;gap:6px}.iconbtn{border:1px solid #ffffff30;background:#ffffff12;color:white;border-radius:9px;padding:9px 10px}
+nav{position:sticky;top:68px;z-index:19;display:flex;gap:5px;overflow-x:auto;background:#22364b;padding:7px 8px;scrollbar-width:none}
+nav::-webkit-scrollbar{display:none}nav button{border:0;background:#eef2f6;color:#26384a;border-radius:999px;padding:8px 11px;white-space:nowrap;font-family:inherit;font-size:12px}
+nav button.active{background:var(--primary);color:#fff}nav button.nav-hidden{display:none}
+main{max-width:1250px;margin:auto;padding:12px}.view{display:none}.view.active{display:block}.section-head{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px}
+.section-head h2{margin:0;font-size:20px}.cards{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}.card{background:var(--card);border-radius:14px;padding:13px;box-shadow:0 1px 5px #0001;border:1px solid #eef1f4}
+.card small{display:block;color:var(--muted);margin-bottom:5px}.card b{font-size:19px;word-break:break-word}.warning-card{border-color:#f0d48c;background:#fffaf0}
+.panel{background:#fff;border-radius:14px;padding:14px;margin-bottom:12px;box-shadow:0 1px 5px #0001;border:1px solid #edf0f3;overflow:auto}.panel h3{margin:0 0 11px;font-size:16px}
+.two-col{display:grid;grid-template-columns:1fr;gap:12px;margin-top:12px}.form-grid{display:grid;grid-template-columns:1fr;gap:10px}.wide{grid-column:1/-1}
+label{font-size:12px;font-weight:700}input,select,textarea{width:100%;margin-top:5px;border:1px solid #c8d2db;border-radius:9px;padding:10px;font-family:inherit;background:white;color:var(--text)}
+textarea{min-height:80px;resize:vertical}.primary,.secondary,.danger,.file-btn{border:0;border-radius:9px;padding:10px 13px;font-family:inherit;cursor:pointer}
+.primary{background:var(--primary);color:#fff}.primary:hover{background:var(--primary2)}.secondary{background:#e9eef3;color:#263746}.danger{background:var(--danger);color:#fff}.fullbtn{width:100%;margin-top:6px}
+.actions{display:flex;flex-wrap:wrap;gap:7px;align-items:center}.list{display:grid;gap:8px}.item{border:1px solid var(--line);border-radius:12px;padding:11px;background:#fff}.item:hover{border-color:#b8c8d5}
+.row{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}.title{font-weight:800}.meta{color:var(--muted);font-size:12px;line-height:1.8;margin-top:4px}.badge{display:inline-block;border-radius:999px;padding:4px 8px;background:#edf4fb;color:var(--primary);font-size:11px;white-space:nowrap}.badge.danger{background:#fdecec;color:#a32424}.badge.warn{background:#fff3d6;color:#865d00}.badge.ok{background:#e9f8ef;color:#176b3a}
+.filterbar,.searchbox{display:flex;gap:7px;flex-wrap:wrap}.filterbar>*{flex:1;min-width:160px}.searchbox input{flex:1;min-width:200px}.empty{padding:18px;text-align:center;color:var(--muted)}
+.notice{background:#fff8e6;border:1px solid #f0d28d;border-radius:11px;padding:11px;line-height:1.9;font-size:12px}.danger-zone{border-color:#f1b6b1}.file-btn{display:inline-block;background:#e9eef3;color:#263746}.file-btn input,.file-label input[type=file]{display:block;margin-top:8px}
+table{width:100%;border-collapse:collapse;min-width:680px}th,td{padding:9px;border-bottom:1px solid #e7ebef;text-align:right;font-size:12px}th{background:#f7f9fb}.money{direction:ltr;display:inline-block}.small{font-size:11px}.overdue{border-color:#efb0aa!important;background:#fff8f7}.urgent{border-color:#efd592!important;background:#fffdf7}
+#toast{position:fixed;left:12px;right:12px;bottom:12px;background:#152638;color:white;padding:12px;border-radius:11px;display:none;z-index:100;box-shadow:0 6px 22px #0003}
+@media(min-width:720px){.cards{grid-template-columns:repeat(5,1fr)}.two-col{grid-template-columns:1fr 1fr}.form-grid{grid-template-columns:repeat(3,1fr)}main{padding:18px}header{padding-inline:20px}}
+@media print{header,nav,.section-head button,.actions,#toast,#loginScreen{display:none!important}body{background:white}.view{display:none!important}#reports{display:block!important}.panel,.card{box-shadow:none;border:1px solid #ccc}}
+
+</style>
+
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#172433">
+<link rel="icon" href="icon-192.png" sizes="192x192">
+<link rel="apple-touch-icon" href="icon-192.png">
+
+</head>
+<body>
+<div id="toast"></div>
+<div style="position:fixed;left:8px;top:8px;z-index:999;background:#ffffffdd;border:1px solid #dbe3ea;border-radius:999px;padding:5px 9px;font:11px Tahoma;color:#405060">نسخه 3.0 آفلاین</div>
+
+<section id="loginScreen" class="login-screen">
+  <div class="login-card">
+    <div class="logo">⚖️</div>
+    <h1 id="loginTitle">سامانه جامع مدیریت موسسه حقوقی</h1>
+    <p class="muted">مدیریت پرونده، موکل، قرارداد، امور مالی و مهلت‌های قضایی</p>
+    <form id="loginForm">
+      <label>نام کاربری<input name="username" autocomplete="username" required></label>
+      <label>رمز عبور<input name="password" type="password" autocomplete="current-password" required></label>
+      <button class="primary fullbtn">ورود</button>
+    </form>
+    <div class="hint">ورود اولیه: <b>admin</b> / <b>admin123</b> — بعد از ورود رمز را تغییر دهید.</div>
+  </div>
+</section>
+
+<div id="app" class="app hidden">
+<header>
+  <div>
+    <h1 id="brandTitle">⚖️ سامانه جامع مدیریت موسسه حقوقی</h1>
+    <small id="currentUserLabel"></small>
+  </div>
+  <div class="header-actions">
+    <button class="iconbtn" onclick="showView('search')">🔎</button>
+    <button class="iconbtn" onclick="logout()">خروج</button>
+  </div>
+</header>
+
+<nav id="nav">
+  <button data-view="dashboard">داشبورد</button>
+  <button data-view="clients">موکلین</button>
+  <button data-view="lawyers">وکلا</button>
+  <button data-view="cases">پرونده‌ها</button>
+  <button data-view="contracts">قراردادها</button>
+  <button data-view="payments">دریافت‌ها</button>
+  <button data-view="checks">چک‌ها</button>
+  <button data-view="expenses">هزینه‌ها</button>
+  <button data-view="deadlines">مهلت‌ها</button>
+  <button data-view="tasks">کارها</button>
+  <button data-view="timeline">گردش پرونده</button>
+  <button data-view="documents">اسناد</button>
+  <button data-view="reports">گزارش‌ها</button>
+  <button data-view="users">کاربران</button>
+  <button data-view="settings">تنظیمات</button>
+  <button data-view="backup">پشتیبان</button>
+</nav>
+
+<main>
+<section id="dashboard" class="view">
+  <div class="section-head"><h2>داشبورد مدیریت</h2><button class="secondary" onclick="renderAll()">↻ بروزرسانی</button></div>
+  <div class="cards">
+    <div class="card"><small>موکلین</small><b id="sClients">0</b></div>
+    <div class="card"><small>پرونده‌های فعال</small><b id="sCases">0</b></div>
+    <div class="card"><small>وکلا</small><b id="sLawyers">0</b></div>
+    <div class="card"><small>قراردادها</small><b id="sContracts">0</b></div>
+    <div class="card"><small>ارزش قراردادها</small><b id="sContractValue">0</b><small>تومان</small></div>
+    <div class="card"><small>وصول‌شده</small><b id="sPaid">0</b><small>تومان</small></div>
+    <div class="card"><small>مانده قراردادها</small><b id="sReceivable">0</b><small>تومان</small></div>
+    <div class="card"><small>چک‌های باز</small><b id="sChecks">0</b><small>تومان</small></div>
+    <div class="card"><small>هزینه‌ها</small><b id="sExpenses">0</b><small>تومان</small></div>
+    <div class="card warning-card"><small>مهلت‌های نزدیک/گذشته</small><b id="sUrgent">0</b></div>
+  </div>
+  <div class="two-col">
+    <div class="panel"><h3>مهلت‌های مهم</h3><div id="dashDeadlines" class="list"></div></div>
+    <div class="panel"><h3>کارهای باز</h3><div id="dashTasks" class="list"></div></div>
+  </div>
+  <div class="panel"><h3>آخرین پرونده‌ها</h3><div id="dashCases" class="list"></div></div>
+</section>
+
+<section id="clients" class="view"></section>
+<section id="lawyers" class="view"></section>
+<section id="cases" class="view"></section>
+<section id="contracts" class="view"></section>
+<section id="payments" class="view"></section>
+<section id="checks" class="view"></section>
+<section id="expenses" class="view"></section>
+<section id="deadlines" class="view"></section>
+<section id="tasks" class="view"></section>
+<section id="timeline" class="view"></section>
+
+<section id="documents" class="view">
+  <div class="section-head"><h2>بایگانی اسناد</h2><button class="secondary" onclick="renderDocuments()">↻</button></div>
+  <div class="panel">
+    <form id="docForm" class="form-grid">
+      <label>عنوان سند<input name="title" required></label>
+      <label>دسته‌بندی<select name="category"><option>دادنامه</option><option>دادخواست</option><option>لایحه</option><option>قرارداد</option><option>وکالتنامه</option><option>کارشناسی</option><option>رسید/فیش</option><option>اظهارنامه</option><option>سایر</option></select></label>
+      <label>موکل<select name="clientId" id="docClient"></select></label>
+      <label>پرونده<select name="caseId" id="docCase"></select></label>
+      <label class="wide">توضیحات<textarea name="notes"></textarea></label>
+      <label class="wide file-label">انتخاب فایل<input type="file" id="docFile" required></label>
+      <div class="wide"><button class="primary">بارگذاری سند</button></div>
+    </form>
+  </div>
+  <div class="panel">
+    <div class="filterbar">
+      <input id="docSearch" placeholder="جست‌وجوی عنوان، پرونده، موکل..." oninput="renderDocuments()">
+      <select id="docCaseFilter" onchange="renderDocuments()"></select>
+    </div>
+    <div id="docList" class="list"></div>
+  </div>
+</section>
+
+<section id="reports" class="view">
+  <div class="section-head"><h2>گزارش‌های مدیریتی</h2><button class="primary" onclick="window.print()">چاپ گزارش</button></div>
+  <div id="reportCards" class="cards"></div>
+  <div class="panel"><h3>مانده هر موکل</h3><div id="clientBalances"></div></div>
+  <div class="panel"><h3>عملکرد وکلا</h3><div id="lawyerReport"></div></div>
+  <div class="panel">
+    <h3>خروجی اطلاعات</h3>
+    <div class="actions">
+      <button class="secondary" onclick="exportCSV('clients')">CSV موکلین</button>
+      <button class="secondary" onclick="exportCSV('cases')">CSV پرونده‌ها</button>
+      <button class="secondary" onclick="exportCSV('contracts')">CSV قراردادها</button>
+      <button class="secondary" onclick="exportCSV('payments')">CSV دریافت‌ها</button>
+      <button class="secondary" onclick="exportCSV('checks')">CSV چک‌ها</button>
+    </div>
+  </div>
+</section>
+
+<section id="users" class="view">
+  <div class="section-head"><h2>کاربران و سطح دسترسی</h2></div>
+  <div class="panel">
+    <form id="userForm" class="form-grid">
+      <input type="hidden" name="editId">
+      <label>نام و نام خانوادگی<input name="fullName" required></label>
+      <label>نام کاربری<input name="username" required></label>
+      <label>رمز عبور<input name="password" type="password" placeholder="در ویرایش، خالی = بدون تغییر"></label>
+      <label>نقش<select name="role"><option value="admin">مدیر</option><option value="lawyer">وکیل</option><option value="accountant">حسابدار</option><option value="secretary">منشی</option></select></label>
+      <label>وکیل مرتبط<select name="lawyerId" id="userLawyer"></select></label>
+      <label>فعال<select name="active"><option value="1">بله</option><option value="0">خیر</option></select></label>
+      <div class="wide actions"><button class="primary">ذخیره کاربر</button><button type="button" class="secondary" onclick="resetForm('userForm')">انصراف</button></div>
+    </form>
+  </div>
+  <div class="panel"><div id="userList" class="list"></div></div>
+</section>
+
+<section id="settings" class="view">
+  <div class="section-head"><h2>تنظیمات موسسه</h2></div>
+  <div class="panel">
+    <form id="settingsForm" class="form-grid">
+      <label class="wide">نام موسسه<input name="instituteName"></label>
+      <label>تلفن موسسه<input name="phone"></label>
+      <label>نشانی<input name="address"></label>
+      <label>نام مدیر<input name="managerName"></label>
+      <label>شماره ثبت<input name="registrationNo"></label>
+      <label>تعداد روز هشدار مهلت<input name="warningDays" type="number" min="1" max="30"></label>
+      <div class="wide actions"><button class="primary">ذخیره تنظیمات</button></div>
+    </form>
+  </div>
+  <div class="panel">
+    <h3>تغییر رمز عبور من</h3>
+    <form id="passwordForm" class="form-grid">
+      <label>رمز فعلی<input name="current" type="password" required></label>
+      <label>رمز جدید<input name="newpass" type="password" required></label>
+      <label>تکرار رمز جدید<input name="repeat" type="password" required></label>
+      <div class="wide"><button class="primary">تغییر رمز</button></div>
+    </form>
+  </div>
+</section>
+
+<section id="backup" class="view">
+  <div class="section-head"><h2>پشتیبان‌گیری و بازیابی</h2></div>
+  <div class="panel">
+    <div class="notice"><b>مهم:</b> اطلاعات این نسخه روی همین دستگاه نگهداری می‌شود. برای اطلاعات واقعی موسسه، مرتب پشتیبان بگیرید. پشتیبان «کامل» اسناد بارگذاری‌شده را هم داخل فایل قرار می‌دهد.</div>
+    <div class="actions">
+      <button class="primary" onclick="exportBackup(false)">پشتیبان اطلاعات</button>
+      <button class="primary" onclick="exportBackup(true)">پشتیبان کامل + اسناد</button>
+      <button class="secondary" onclick="exportEncryptedBackup()">پشتیبان رمزدار</button>
+      <label class="file-btn">بازیابی فایل<input type="file" id="restoreInput" accept=".json,.lgoffice,application/json"></label>
+    </div>
+  </div>
+  <div class="panel danger-zone">
+    <h3>پاک‌سازی</h3>
+    <p>این بخش فقط برای شروع مجدد است.</p>
+    <button class="danger" onclick="clearAllData()">پاک کردن همه اطلاعات</button>
+  </div>
+</section>
+
+<section id="search" class="view">
+  <div class="section-head"><h2>جست‌وجوی جامع</h2></div>
+  <div class="panel">
+    <div class="searchbox"><input id="globalSearch" placeholder="نام موکل، شماره پرونده، طرف مقابل، شناسه صیادی، قرارداد..." onkeydown="if(event.key==='Enter')doSearch()"><button class="primary" onclick="doSearch()">جست‌وجو</button></div>
+  </div>
+  <div class="panel"><div id="searchResults" class="list"></div></div>
+</section>
+
+</main>
+</div>
+
+<script>
+
+const DATA_KEY='legalOfficeFull_v2';
+const SESSION_KEY='legalOfficeSession_v2';
+const DB_NAME='LegalOfficeFilesV2';
+const STORE='documents';
+let state=loadState();
+let currentUser=null;
+let currentView='dashboard';
+
+function defaultState(){
+ return {
+   version:2,
+   settings:{instituteName:'سامانه جامع مدیریت موسسه حقوقی',phone:'',address:'',managerName:'',registrationNo:'',warningDays:5},
+   users:[],
+   clients:[],lawyers:[],cases:[],contracts:[],payments:[],checks:[],expenses:[],deadlines:[],tasks:[],timeline:[]
+ };
+}
+function loadState(){try{let x=JSON.parse(localStorage.getItem(DATA_KEY));return x&&x.version?x:defaultState()}catch(e){return defaultState()}}
+function persist(){localStorage.setItem(DATA_KEY,JSON.stringify(state))}
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,8)}
+function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function money(n){return Number(n||0).toLocaleString('fa-IR')}
+function toast(msg){let e=document.getElementById('toast');e.textContent=msg;e.style.display='block';clearTimeout(window._toast);window._toast=setTimeout(()=>e.style.display='none',2200)}
+function find(arr,id){return arr.find(x=>x.id===id)}
+function clientName(id){return find(state.clients,id)?.name||'-'}
+function lawyerName(id){return find(state.lawyers,id)?.name||'-'}
+function caseName(id){return find(state.cases,id)?.title||'-'}
+function contractName(id){let x=find(state.contracts,id);return x?(x.number||x.type||'قرارداد'):'-'}
+function roleName(r){return ({admin:'مدیر',lawyer:'وکیل',accountant:'حسابدار',secretary:'منشی'})[r]||r}
+function formData(form){return Object.fromEntries(new FormData(form).entries())}
+function resetForm(id){let f=document.getElementById(id);if(f){f.reset();let e=f.querySelector('[name=editId]');if(e)e.value=''}}
+async function sha256(text){let b=new TextEncoder().encode(text);let h=await crypto.subtle.digest('SHA-256',b);return [...new Uint8Array(h)].map(x=>x.toString(16).padStart(2,'0')).join('')}
+async function ensureAdmin(){
+ if(!state.users.length){
+   state.users.push({id:uid(),fullName:'مدیر سیستم',username:'admin',passwordHash:await sha256('admin123'),role:'admin',active:'1',lawyerId:''});
+   persist();
+ }
+}
+function can(view){
+ if(!currentUser)return false;
+ if(currentUser.role==='admin')return true;
+ const p={
+  lawyer:['dashboard','clients','lawyers','cases','deadlines','tasks','timeline','documents','search','settings','backup'],
+  accountant:['dashboard','clients','contracts','payments','checks','expenses','reports','search','settings','backup'],
+  secretary:['dashboard','clients','lawyers','cases','deadlines','tasks','timeline','documents','search','settings','backup']
+ };
+ return (p[currentUser.role]||[]).includes(view);
+}
+function applyPermissions(){
+ document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('nav-hidden',!can(b.dataset.view)));
+}
+async function loginUser(username,password){
+ let u=state.users.find(x=>x.username.trim()===username.trim()&&x.active!=='0');
+ if(!u)return false;
+ let hash=await sha256(password);
+ if(hash!==u.passwordHash)return false;
+ currentUser=u;sessionStorage.setItem(SESSION_KEY,u.id);return true;
+}
+function logout(){sessionStorage.removeItem(SESSION_KEY);currentUser=null;document.getElementById('app').classList.add('hidden');document.getElementById('loginScreen').classList.remove('hidden')}
+
+document.getElementById('loginForm').addEventListener('submit',async e=>{
+ e.preventDefault();let f=formData(e.target);
+ if(await loginUser(f.username,f.password)){e.target.reset();startApp()}else toast('نام کاربری یا رمز عبور صحیح نیست');
+});
+
+function startApp(){
+ document.getElementById('loginScreen').classList.add('hidden');document.getElementById('app').classList.remove('hidden');
+ document.getElementById('brandTitle').textContent='⚖️ '+(state.settings.instituteName||'سامانه جامع مدیریت موسسه حقوقی');
+ document.getElementById('currentUserLabel').textContent=`${currentUser.fullName} — ${roleName(currentUser.role)}`;
+ applyPermissions();buildViews();renderAll();showView(can('dashboard')?'dashboard':'search');
+}
+function showView(v){
+ if(!can(v)){toast('دسترسی این بخش برای شما فعال نیست');return}
+ currentView=v;document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));document.getElementById(v).classList.add('active');
+ document.querySelectorAll('#nav button').forEach(x=>x.classList.toggle('active',x.dataset.view===v));
+ if(v==='reports')renderReports();if(v==='documents')renderDocuments();if(v==='users')renderUsers();if(v==='settings')renderSettings();
+ window.scrollTo({top:0,behavior:'smooth'});
+}
+document.querySelectorAll('#nav button').forEach(b=>b.onclick=()=>showView(b.dataset.view));
+
+function selectOptions(arr,label,includeBlank=true){return (includeBlank?'<option value="">— انتخاب —</option>':'')+arr.map(x=>`<option value="${x.id}">${esc(label(x))}</option>`).join('')}
+function statusBadge(s){
+ let c=(['برگشتی','گذشته','لغو شد'].includes(s)?'danger':(['فعال','وصول شده','انجام شد','تسویه'].includes(s)?'ok':''));
+ return `<span class="badge ${c}">${esc(s||'-')}</span>`;
+}
+function itemCard(title,meta,kind,id,status='',extraClass=''){
+ let edit = canEditKind(kind)?`<button class="secondary" onclick="editRecord('${kind}','${id}')">ویرایش</button>`:'';
+ let del = canDeleteKind(kind)?`<button class="danger" onclick="deleteRecord('${kind}','${id}')">حذف</button>`:'';
+ return `<div class="item ${extraClass}"><div class="row"><div class="title">${esc(title)}</div>${status?statusBadge(status):''}</div><div class="meta">${meta}</div><div class="actions">${edit}${del}</div></div>`
+}
+function canEditKind(kind){
+ if(currentUser.role==='admin')return true;
+ if(currentUser.role==='accountant')return ['clients','contracts','payments','checks','expenses'].includes(kind);
+ if(currentUser.role==='lawyer')return ['clients','cases','deadlines','tasks','timeline'].includes(kind);
+ if(currentUser.role==='secretary')return ['clients','lawyers','cases','deadlines','tasks','timeline'].includes(kind);
+ return false;
+}
+function canDeleteKind(kind){return currentUser.role==='admin'}
+
+function buildViews(){
+ document.getElementById('clients').innerHTML=`
+ <div class="section-head"><h2>موکلین</h2></div>
+ <div class="panel"><form id="clientsForm" class="form-grid"><input type="hidden" name="editId">
+ <label>نام و نام خانوادگی<input name="name" required></label><label>کد ملی<input name="nationalId"></label><label>تلفن<input name="phone"></label>
+ <label>تلفن دوم<input name="phone2"></label><label>ایمیل<input name="email"></label><label>تاریخ تولد<input name="birthDate" placeholder="مثلاً 1352/05/09"></label>
+ <label class="wide">نشانی<textarea name="address"></textarea></label><label class="wide">یادداشت محرمانه<textarea name="notes"></textarea></label>
+ <div class="wide actions"><button class="primary">ذخیره موکل</button><button type="button" class="secondary" onclick="resetForm('clientsForm')">انصراف</button></div></form></div>
+ <div class="panel"><div class="filterbar"><input id="clientsQ" placeholder="جست‌وجوی موکل..." oninput="renderClients()"></div><div id="clientsList" class="list"></div></div>`;
+
+ document.getElementById('lawyers').innerHTML=`
+ <div class="section-head"><h2>وکلا</h2></div>
+ <div class="panel"><form id="lawyersForm" class="form-grid"><input type="hidden" name="editId">
+ <label>نام وکیل<input name="name" required></label><label>شماره پروانه<input name="license"></label><label>مرجع صدور پروانه<input name="bar"></label>
+ <label>تلفن<input name="phone"></label><label>ایمیل<input name="email"></label><label>درصد سهم پیش‌فرض<input name="share" type="number" step="0.01"></label>
+ <label class="wide">یادداشت<textarea name="notes"></textarea></label><div class="wide actions"><button class="primary">ذخیره وکیل</button><button type="button" class="secondary" onclick="resetForm('lawyersForm')">انصراف</button></div></form></div>
+ <div class="panel"><div id="lawyersList" class="list"></div></div>`;
+
+ document.getElementById('cases').innerHTML=`
+ <div class="section-head"><h2>پرونده‌ها</h2></div>
+ <div class="panel"><form id="casesForm" class="form-grid"><input type="hidden" name="editId">
+ <label>عنوان پرونده<input name="title" required></label><label>موکل<select name="clientId" id="caseClient"></select></label><label>وکیل مسئول<select name="lawyerId" id="caseLawyer"></select></label>
+ <label>شماره پرونده<input name="caseNo"></label><label>شماره بایگانی<input name="archiveNo"></label><label>شماره دادنامه<input name="judgmentNo"></label>
+ <label>شعبه<input name="branch"></label><label>مجتمع/مرجع<input name="court"></label><label>نوع پرونده<select name="type"><option>حقوقی</option><option>کیفری</option><option>خانواده</option><option>اجرای احکام</option><option>ثبتی</option><option>داوری</option><option>دیوان</option><option>سایر</option></select></label>
+ <label>سمت موکل<input name="clientRole" placeholder="خواهان، خوانده، شاکی..."></label><label>طرف مقابل<input name="opponent"></label><label>وکیل طرف مقابل<input name="opponentLawyer"></label>
+ <label>تاریخ تشکیل<input name="filingDate" placeholder="1405/06/20"></label><label>وضعیت<select name="status"><option>فعال</option><option>در انتظار</option><option>کارشناسی</option><option>تجدیدنظر</option><option>اجرای حکم</option><option>مختومه</option></select></label><label>مرحله<input name="stage" placeholder="بدوی، تجدیدنظر..."></label>
+ <label class="wide">اقدام بعدی<input name="nextAction"></label><label class="wide">شرح/یادداشت<textarea name="notes"></textarea></label>
+ <div class="wide actions"><button class="primary">ذخیره پرونده</button><button type="button" class="secondary" onclick="resetForm('casesForm')">انصراف</button></div></form></div>
+ <div class="panel"><div class="filterbar"><input id="casesQ" placeholder="جست‌وجو..." oninput="renderCases()"><select id="caseStatusFilter" onchange="renderCases()"><option value="">همه وضعیت‌ها</option><option>فعال</option><option>در انتظار</option><option>کارشناسی</option><option>تجدیدنظر</option><option>اجرای حکم</option><option>مختومه</option></select></div><div id="casesList" class="list"></div></div>`;
+
+ document.getElementById('contracts').innerHTML=`
+ <div class="section-head"><h2>قراردادها</h2></div>
+ <div class="panel"><form id="contractsForm" class="form-grid"><input type="hidden" name="editId">
+ <label>موکل<select name="clientId" id="contractClient"></select></label><label>پرونده<select name="caseId" id="contractCase"></select></label><label>نوع قرارداد<input name="type" placeholder="وکالت، جعاله، مشاوره..."></label>
+ <label>شماره قرارداد<input name="number"></label><label>مبلغ ثابت (تومان)<input name="amount" type="number"></label><label>درصد موفقیت<input name="successPercent" type="number" step="0.01"></label>
+ <label>مبنای درصد موفقیت<input name="successBase" placeholder="مثلاً مبلغ وصولی"></label><label>تاریخ شروع<input name="startDate"></label><label>تاریخ پایان<input name="endDate"></label>
+ <label>وکیل مرتبط<select name="lawyerId" id="contractLawyer"></select></label><label>سهم وکیل %<input name="lawyerShare" type="number" step="0.01"></label><label>وضعیت<select name="status"><option>فعال</option><option>تسویه</option><option>فسخ</option><option>تعلیق</option></select></label>
+ <label class="wide">شرایط پرداخت/یادداشت<textarea name="notes"></textarea></label><div class="wide actions"><button class="primary">ذخیره قرارداد</button><button type="button" class="secondary" onclick="resetForm('contractsForm')">انصراف</button></div></form></div>
+ <div class="panel"><div id="contractsList" class="list"></div></div>`;
+
+ document.getElementById('payments').innerHTML=`
+ <div class="section-head"><h2>دریافت‌ها و اقساط</h2></div>
+ <div class="panel"><form id="paymentsForm" class="form-grid"><input type="hidden" name="editId">
+ <label>قرارداد<select name="contractId" id="paymentContract"></select></label><label>مبلغ (تومان)<input name="amount" type="number" required></label><label>تاریخ دریافت<input name="date"></label>
+ <label>روش<select name="method"><option>نقدی</option><option>کارت/انتقال</option><option>چک</option><option>ساتنا/پایا</option><option>سایر</option></select></label><label>شماره پیگیری<input name="reference"></label><label>دریافت‌کننده<input name="receiver"></label>
+ <label class="wide">توضیحات<textarea name="notes"></textarea></label><div class="wide actions"><button class="primary">ثبت دریافت</button><button type="button" class="secondary" onclick="resetForm('paymentsForm')">انصراف</button></div></form></div>
+ <div class="panel"><div id="paymentsList" class="list"></div></div>`;
+
+ document.getElementById('checks').innerHTML=`
+ <div class="section-head"><h2>مدیریت چک‌ها</h2></div>
+ <div class="panel"><form id="checksForm" class="form-grid"><input type="hidden" name="editId">
+ <label>موکل<select name="clientId" id="checkClient"></select></label><label>قرارداد<select name="contractId" id="checkContract"></select></label><label>بانک<input name="bank"></label>
+ <label>شماره چک<input name="checkNo"></label><label>شناسه صیادی<input name="sayad"></label><label>صادرکننده<input name="issuer"></label>
+ <label>مبلغ (تومان)<input name="amount" type="number"></label><label>سررسید<input name="dueDate"></label><label>وضعیت<select name="status"><option>در انتظار</option><option>وصول شده</option><option>برگشتی</option><option>مسترد شده</option><option>تعویض شده</option></select></label>
+ <label class="wide">توضیحات<textarea name="notes"></textarea></label><div class="wide actions"><button class="primary">ذخیره چک</button><button type="button" class="secondary" onclick="resetForm('checksForm')">انصراف</button></div></form></div>
+ <div class="panel"><div id="checksList" class="list"></div></div>`;
+
+ document.getElementById('expenses').innerHTML=`
+ <div class="section-head"><h2>هزینه‌ها</h2></div>
+ <div class="panel"><form id="expensesForm" class="form-grid"><input type="hidden" name="editId">
+ <label>پرونده<select name="caseId" id="expenseCase"></select></label><label>موکل<select name="clientId" id="expenseClient"></select></label><label>نوع هزینه<select name="type"><option>هزینه دادرسی</option><option>کارشناسی</option><option>تمبر وکالت</option><option>ابلاغ/پست</option><option>ایاب و ذهاب</option><option>حق‌الزحمه</option><option>سایر</option></select></label>
+ <label>مبلغ (تومان)<input name="amount" type="number"></label><label>تاریخ<input name="date"></label><label>پرداخت‌کننده<input name="payer"></label>
+ <label class="wide">توضیحات<textarea name="notes"></textarea></label><div class="wide actions"><button class="primary">ثبت هزینه</button><button type="button" class="secondary" onclick="resetForm('expensesForm')">انصراف</button></div></form></div>
+ <div class="panel"><div id="expensesList" class="list"></div></div>`;
+
+ document.getElementById('deadlines').innerHTML=`
+ <div class="section-head"><h2>جلسات و مهلت‌های قضایی</h2></div>
+ <div class="panel"><form id="deadlinesForm" class="form-grid"><input type="hidden" name="editId">
+ <label>پرونده<select name="caseId" id="deadlineCase"></select></label><label>عنوان<input name="title" required placeholder="جلسه رسیدگی، پایان مهلت تجدیدنظر..."></label><label>نوع<select name="type"><option>جلسه رسیدگی</option><option>تجدیدنظر</option><option>واخواهی</option><option>فرجام</option><option>کارشناسی</option><option>رفع نقص</option><option>اجرای احکام</option><option>سررسید</option><option>سایر</option></select></label>
+ <label>تاریخ شمسی<input name="dueDate" placeholder="1405/06/30"></label><label>ساعت<input name="time" placeholder="10:30"></label><label>وضعیت<select name="status"><option>باز</option><option>انجام شد</option><option>لغو شد</option></select></label>
+ <label>مسئول<select name="lawyerId" id="deadlineLawyer"></select></label><label class="wide">توضیحات<textarea name="notes"></textarea></label>
+ <div class="wide actions"><button class="primary">ثبت مهلت</button><button type="button" class="secondary" onclick="resetForm('deadlinesForm')">انصراف</button></div></form></div>
+ <div class="panel"><div id="deadlinesList" class="list"></div></div>`;
+
+ document.getElementById('tasks').innerHTML=`
+ <div class="section-head"><h2>کارهای داخلی و ارجاع</h2></div>
+ <div class="panel"><form id="tasksForm" class="form-grid"><input type="hidden" name="editId">
+ <label>عنوان کار<input name="title" required></label><label>پرونده<select name="caseId" id="taskCase"></select></label><label>مسئول<select name="lawyerId" id="taskLawyer"></select></label>
+ <label>مهلت<input name="dueDate"></label><label>اولویت<select name="priority"><option>عادی</option><option>مهم</option><option>فوری</option></select></label><label>وضعیت<select name="status"><option>باز</option><option>در حال انجام</option><option>انجام شد</option></select></label>
+ <label class="wide">توضیحات<textarea name="notes"></textarea></label><div class="wide actions"><button class="primary">ثبت کار</button><button type="button" class="secondary" onclick="resetForm('tasksForm')">انصراف</button></div></form></div>
+ <div class="panel"><div id="tasksList" class="list"></div></div>`;
+
+ document.getElementById('timeline').innerHTML=`
+ <div class="section-head"><h2>گردش و خط زمانی پرونده</h2></div>
+ <div class="panel"><form id="timelineForm" class="form-grid"><input type="hidden" name="editId">
+ <label>پرونده<select name="caseId" id="timelineCase"></select></label><label>تاریخ<input name="date"></label><label>نوع رویداد<select name="type"><option>ثبت دادخواست</option><option>ابلاغ</option><option>جلسه</option><option>قرار</option><option>کارشناسی</option><option>دادنامه</option><option>تجدیدنظر</option><option>اجرای حکم</option><option>مکاتبه</option><option>پرداخت</option><option>سایر</option></select></label>
+ <label class="wide">شرح رویداد<textarea name="description" required></textarea></label><div class="wide actions"><button class="primary">ثبت رویداد</button><button type="button" class="secondary" onclick="resetForm('timelineForm')">انصراف</button></div></form></div>
+ <div class="panel"><div class="filterbar"><select id="timelineFilter" onchange="renderTimeline()"></select></div><div id="timelineList" class="list"></div></div>`;
+
+ bindCrud('clientsForm','clients');bindCrud('lawyersForm','lawyers');bindCrud('casesForm','cases');bindCrud('contractsForm','contracts');
+ bindCrud('paymentsForm','payments');bindCrud('checksForm','checks');bindCrud('expensesForm','expenses');bindCrud('deadlinesForm','deadlines');bindCrud('tasksForm','tasks');bindCrud('timelineForm','timeline');
+ document.getElementById('docForm').onsubmit=saveDocument;
+ document.getElementById('userForm').onsubmit=saveUser;
+ document.getElementById('settingsForm').onsubmit=saveSettings;
+ document.getElementById('passwordForm').onsubmit=changeMyPassword;
+ document.getElementById('restoreInput').onchange=restoreBackup;
+}
+
+function bindCrud(formId,key){
+ let f=document.getElementById(formId); if(!f)return;
+ f.onsubmit=e=>{e.preventDefault();if(!canEditKind(key)){toast('دسترسی ثبت/ویرایش ندارید');return}
+ let o=formData(f),edit=o.editId;delete o.editId;
+ if(edit){let i=state[key].findIndex(x=>x.id===edit);if(i>=0)state[key][i]={...state[key][i],...o}}
+ else {o.id=uid();o.createdAt=new Date().toISOString();state[key].unshift(o)}
+ persist();resetForm(formId);renderAll();toast('ذخیره شد');
+ };
+}
+function deleteRecord(kind,id){
+ if(!canDeleteKind(kind)){toast('فقط مدیر می‌تواند حذف کند');return}
+ if(confirm('این مورد حذف شود؟')){state[kind]=state[kind].filter(x=>x.id!==id);persist();renderAll();toast('حذف شد')}
+}
+function editRecord(kind,id){
+ let map={clients:'clientsForm',lawyers:'lawyersForm',cases:'casesForm',contracts:'contractsForm',payments:'paymentsForm',checks:'checksForm',expenses:'expensesForm',deadlines:'deadlinesForm',tasks:'tasksForm',timeline:'timelineForm'};
+ let f=document.getElementById(map[kind]),x=find(state[kind],id);if(!f||!x)return;
+ Object.entries(x).forEach(([k,v])=>{let el=f.elements[k];if(el)el.value=v??''});if(f.elements.editId)f.elements.editId.value=id;
+ showView(kind==='timeline'?'timeline':kind);window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function fillSelects(){
+ const clients=selectOptions(state.clients,x=>x.name), lawyers=selectOptions(state.lawyers,x=>x.name), cases=selectOptions(state.cases,x=>x.title),
+ contracts=selectOptions(state.contracts,x=>(x.number||x.type||'قرارداد')+' — '+clientName(x.clientId));
+ [['caseClient',clients],['contractClient',clients],['checkClient',clients],['expenseClient',clients],['docClient',clients],
+  ['caseLawyer',lawyers],['contractLawyer',lawyers],['deadlineLawyer',lawyers],['taskLawyer',lawyers],['userLawyer',lawyers],
+  ['contractCase',cases],['expenseCase',cases],['deadlineCase',cases],['taskCase',cases],['timelineCase',cases],['docCase',cases],
+  ['paymentContract',contracts],['checkContract',contracts]].forEach(([id,html])=>{let e=document.getElementById(id);if(e)e.innerHTML=html});
+ let tf=document.getElementById('timelineFilter');if(tf)tf.innerHTML='<option value="">همه پرونده‌ها</option>'+state.cases.map(x=>`<option value="${x.id}">${esc(x.title)}</option>`).join('');
+ let df=document.getElementById('docCaseFilter');if(df)df.innerHTML='<option value="">همه پرونده‌ها</option>'+state.cases.map(x=>`<option value="${x.id}">${esc(x.title)}</option>`).join('');
+}
+
+function renderClients(){
+ let q=(document.getElementById('clientsQ')?.value||'').toLowerCase();
+ let a=state.clients.filter(x=>JSON.stringify(x).toLowerCase().includes(q));
+ document.getElementById('clientsList').innerHTML=a.map(x=>itemCard(x.name,`کد ملی: ${esc(x.nationalId||'-')} | تلفن: ${esc(x.phone||'-')}<br>${esc(x.address||'')}`,'clients',x.id)).join('')||empty();
+}
+function renderLawyers(){
+ document.getElementById('lawyersList').innerHTML=state.lawyers.map(x=>itemCard(x.name,`پروانه: ${esc(x.license||'-')} | ${esc(x.bar||'-')}<br>تلفن: ${esc(x.phone||'-')} | سهم پیش‌فرض: ${esc(x.share||0)}٪`,'lawyers',x.id)).join('')||empty();
+}
+function renderCases(){
+ let q=(document.getElementById('casesQ')?.value||'').toLowerCase(),st=document.getElementById('caseStatusFilter')?.value||'';
+ let a=state.cases.filter(x=>(!st||x.status===st)&&((JSON.stringify(x)+' '+clientName(x.clientId)+' '+lawyerName(x.lawyerId)).toLowerCase().includes(q)));
+ document.getElementById('casesList').innerHTML=a.map(x=>itemCard(x.title,`موکل: ${esc(clientName(x.clientId))} | وکیل: ${esc(lawyerName(x.lawyerId))}<br>شماره پرونده: ${esc(x.caseNo||'-')} | شعبه: ${esc(x.branch||'-')} | مرجع: ${esc(x.court||'-')}<br>طرف مقابل: ${esc(x.opponent||'-')} | اقدام بعدی: ${esc(x.nextAction||'-')}`,'cases',x.id,x.status)).join('')||empty();
+}
+function paidForContract(id){return state.payments.filter(x=>x.contractId===id).reduce((a,x)=>a+Number(x.amount||0),0)}
+function renderContracts(){
+ document.getElementById('contractsList').innerHTML=state.contracts.map(x=>{let paid=paidForContract(x.id),bal=Number(x.amount||0)-paid;return itemCard(x.number||x.type||'قرارداد',`موکل: ${esc(clientName(x.clientId))} | پرونده: ${esc(caseName(x.caseId))}<br>مبلغ: ${money(x.amount)} تومان | وصول: ${money(paid)} | مانده: ${money(bal)} | درصد موفقیت: ${esc(x.successPercent||0)}٪`,'contracts',x.id,x.status)}).join('')||empty();
+}
+function renderPayments(){
+ document.getElementById('paymentsList').innerHTML=state.payments.map(x=>{let c=find(state.contracts,x.contractId);return itemCard(`${money(x.amount)} تومان`,`موکل: ${esc(clientName(c?.clientId))} | قرارداد: ${esc(contractName(x.contractId))}<br>تاریخ: ${esc(x.date||'-')} | روش: ${esc(x.method||'-')} | پیگیری: ${esc(x.reference||'-')}`,'payments',x.id)}).join('')||empty();
+}
+function renderChecks(){
+ document.getElementById('checksList').innerHTML=state.checks.map(x=>itemCard(x.checkNo||x.sayad||'چک',`موکل: ${esc(clientName(x.clientId))} | بانک: ${esc(x.bank||'-')}<br>شناسه صیادی: ${esc(x.sayad||'-')} | صادرکننده: ${esc(x.issuer||'-')}<br>مبلغ: ${money(x.amount)} تومان | سررسید: ${esc(x.dueDate||'-')}`,'checks',x.id,x.status)).join('')||empty();
+}
+function renderExpenses(){
+ document.getElementById('expensesList').innerHTML=state.expenses.map(x=>itemCard(`${x.type||'هزینه'} — ${money(x.amount)} تومان`,`موکل: ${esc(clientName(x.clientId))} | پرونده: ${esc(caseName(x.caseId))}<br>تاریخ: ${esc(x.date||'-')} | پرداخت‌کننده: ${esc(x.payer||'-')}`,'expenses',x.id)).join('')||empty();
+}
+function deadlineState(x){
+ if(x.status!=='باز'||!x.dueDate)return {class:'',text:''};
+ let d=daysUntilJalali(x.dueDate);if(d===null)return {class:'',text:''};
+ if(d<0)return {class:'overdue',text:`${Math.abs(d)} روز گذشته`};if(d<=Number(state.settings.warningDays||5))return {class:'urgent',text:d===0?'امروز':`${d} روز مانده`};return {class:'',text:`${d} روز مانده`};
+}
+function renderDeadlines(){
+ let a=state.deadlines.slice().sort((x,y)=>(x.dueDate||'').localeCompare(y.dueDate||''));
+ document.getElementById('deadlinesList').innerHTML=a.map(x=>{let d=deadlineState(x);return itemCard(x.title,`پرونده: ${esc(caseName(x.caseId))} | مسئول: ${esc(lawyerName(x.lawyerId))}<br>تاریخ: ${esc(x.dueDate||'-')} ${esc(x.time||'')} | نوع: ${esc(x.type||'-')} ${d.text?`| <b>${esc(d.text)}</b>`:''}`,'deadlines',x.id,x.status,d.class)}).join('')||empty();
+}
+function renderTasks(){
+ document.getElementById('tasksList').innerHTML=state.tasks.map(x=>itemCard(x.title,`پرونده: ${esc(caseName(x.caseId))} | مسئول: ${esc(lawyerName(x.lawyerId))}<br>مهلت: ${esc(x.dueDate||'-')} | اولویت: ${esc(x.priority||'-')}`,'tasks',x.id,x.status,x.priority==='فوری'?'urgent':'')).join('')||empty();
+}
+function renderTimeline(){
+ let f=document.getElementById('timelineFilter')?.value||'';
+ let a=state.timeline.filter(x=>!f||x.caseId===f).slice().sort((x,y)=>(y.date||'').localeCompare(x.date||''));
+ document.getElementById('timelineList').innerHTML=a.map(x=>itemCard(`${x.date||'-'} — ${x.type||'رویداد'}`,`پرونده: ${esc(caseName(x.caseId))}<br>${esc(x.description||'')}`,'timeline',x.id)).join('')||empty();
+}
+function empty(){return '<div class="empty">موردی ثبت نشده است.</div>'}
+
+function renderDashboard(){
+ document.getElementById('sClients').textContent=state.clients.length;document.getElementById('sCases').textContent=state.cases.filter(x=>x.status!=='مختومه').length;
+ document.getElementById('sLawyers').textContent=state.lawyers.length;document.getElementById('sContracts').textContent=state.contracts.length;
+ let contractTotal=state.contracts.reduce((a,x)=>a+Number(x.amount||0),0),paid=state.payments.reduce((a,x)=>a+Number(x.amount||0),0),exp=state.expenses.reduce((a,x)=>a+Number(x.amount||0),0),
+ checks=state.checks.filter(x=>!['وصول شده','مسترد شده'].includes(x.status)).reduce((a,x)=>a+Number(x.amount||0),0);
+ document.getElementById('sContractValue').textContent=money(contractTotal);document.getElementById('sPaid').textContent=money(paid);document.getElementById('sReceivable').textContent=money(Math.max(0,contractTotal-paid));
+ document.getElementById('sChecks').textContent=money(checks);document.getElementById('sExpenses').textContent=money(exp);
+ let urgent=state.deadlines.filter(x=>{let d=deadlineState(x);return x.status==='باز'&&(d.class==='urgent'||d.class==='overdue')});document.getElementById('sUrgent').textContent=urgent.length;
+ document.getElementById('dashDeadlines').innerHTML=urgent.slice(0,8).map(x=>{let d=deadlineState(x);return `<div class="item ${d.class}"><div class="row"><div class="title">${esc(x.title)}</div>${statusBadge(x.status)}</div><div class="meta">${esc(caseName(x.caseId))} — ${esc(x.dueDate||'-')} — <b>${esc(d.text)}</b></div></div>`}).join('')||empty();
+ document.getElementById('dashTasks').innerHTML=state.tasks.filter(x=>x.status!=='انجام شد').slice(0,8).map(x=>`<div class="item"><div class="row"><div class="title">${esc(x.title)}</div>${statusBadge(x.status)}</div><div class="meta">${esc(caseName(x.caseId))} — ${esc(lawyerName(x.lawyerId))} — ${esc(x.dueDate||'-')}</div></div>`).join('')||empty();
+ document.getElementById('dashCases').innerHTML=state.cases.slice(0,8).map(x=>`<div class="item"><div class="row"><div class="title">${esc(x.title)}</div>${statusBadge(x.status)}</div><div class="meta">موکل: ${esc(clientName(x.clientId))} | وکیل: ${esc(lawyerName(x.lawyerId))} | ${esc(x.caseNo||'-')}</div></div>`).join('')||empty();
+}
+function renderAll(){
+ fillSelects();renderDashboard();renderClients();renderLawyers();renderCases();renderContracts();renderPayments();renderChecks();renderExpenses();renderDeadlines();renderTasks();renderTimeline();renderUsers();
+}
+
+async function saveUser(e){
+ e.preventDefault();if(currentUser.role!=='admin'){toast('فقط مدیر دسترسی دارد');return}
+ let f=formData(e.target),edit=f.editId;delete f.editId;
+ if(state.users.some(x=>x.username===f.username&&x.id!==edit)){toast('این نام کاربری قبلاً ثبت شده');return}
+ if(edit){
+  let u=find(state.users,edit);if(!u)return;u.fullName=f.fullName;u.username=f.username;u.role=f.role;u.lawyerId=f.lawyerId;u.active=f.active;
+  if(f.password)u.passwordHash=await sha256(f.password);
+ } else {
+  if(!f.password||f.password.length<6){toast('رمز حداقل ۶ کاراکتر باشد');return}
+  f.id=uid();f.passwordHash=await sha256(f.password);delete f.password;state.users.push(f);
+ }
+ persist();resetForm('userForm');renderUsers();toast('کاربر ذخیره شد');
+}
+function renderUsers(){
+ if(!document.getElementById('userList'))return;
+ document.getElementById('userList').innerHTML=state.users.map(x=>`<div class="item"><div class="row"><div class="title">${esc(x.fullName)}</div>${statusBadge(x.active==='0'?'غیرفعال':'فعال')}</div><div class="meta">نام کاربری: ${esc(x.username)} | نقش: ${esc(roleName(x.role))} | وکیل مرتبط: ${esc(lawyerName(x.lawyerId))}</div><div class="actions">${currentUser?.role==='admin'?`<button class="secondary" onclick="editUser('${x.id}')">ویرایش</button>${x.id!==currentUser.id?`<button class="danger" onclick="deleteUser('${x.id}')">حذف</button>`:''}`:''}</div></div>`).join('')||empty();
+}
+function editUser(id){let x=find(state.users,id),f=document.getElementById('userForm');if(!x)return;['fullName','username','role','lawyerId','active'].forEach(k=>f.elements[k].value=x[k]||'');f.elements.editId.value=x.id;f.elements.password.value='';window.scrollTo({top:0,behavior:'smooth'})}
+function deleteUser(id){if(currentUser.role!=='admin'||id===currentUser.id)return;if(confirm('کاربر حذف شود؟')){state.users=state.users.filter(x=>x.id!==id);persist();renderUsers()}}
+
+function renderSettings(){
+ let f=document.getElementById('settingsForm');if(!f)return;Object.entries(state.settings).forEach(([k,v])=>{if(f.elements[k])f.elements[k].value=v??''});
+}
+function saveSettings(e){e.preventDefault();let f=formData(e.target);state.settings={...state.settings,...f};persist();document.getElementById('brandTitle').textContent='⚖️ '+state.settings.instituteName;document.getElementById('loginTitle').textContent=state.settings.instituteName;toast('تنظیمات ذخیره شد')}
+async function changeMyPassword(e){
+ e.preventDefault();let f=formData(e.target);if(await sha256(f.current)!==currentUser.passwordHash){toast('رمز فعلی صحیح نیست');return}
+ if(f.newpass.length<6){toast('رمز جدید حداقل ۶ کاراکتر باشد');return}if(f.newpass!==f.repeat){toast('تکرار رمز یکسان نیست');return}
+ currentUser.passwordHash=await sha256(f.newpass);persist();e.target.reset();toast('رمز تغییر کرد');
+}
+
+function renderReports(){
+ let totalContracts=state.contracts.reduce((a,x)=>a+Number(x.amount||0),0),paid=state.payments.reduce((a,x)=>a+Number(x.amount||0),0),
+ expenses=state.expenses.reduce((a,x)=>a+Number(x.amount||0),0),openChecks=state.checks.filter(x=>!['وصول شده','مسترد شده'].includes(x.status)).reduce((a,x)=>a+Number(x.amount||0),0);
+ document.getElementById('reportCards').innerHTML=[
+  ['کل قراردادها',totalContracts],['کل وصول',paid],['مطالبات قراردادی',Math.max(0,totalContracts-paid)],['چک‌های باز',openChecks],['هزینه‌ها',expenses],['خالص دریافت نقدی',paid-expenses]
+ ].map(([t,v])=>`<div class="card"><small>${t}</small><b>${money(v)}</b><small>تومان</small></div>`).join('');
+ let rows=state.clients.map(c=>{let contractIds=state.contracts.filter(x=>x.clientId===c.id).map(x=>x.id),ct=state.contracts.filter(x=>x.clientId===c.id).reduce((a,x)=>a+Number(x.amount||0),0),p=state.payments.filter(x=>contractIds.includes(x.contractId)).reduce((a,x)=>a+Number(x.amount||0),0);return [c.name,ct,p,ct-p]}).filter(x=>x[1]||x[2]);
+ document.getElementById('clientBalances').innerHTML=table(['موکل','قرارداد','وصول','مانده'],rows.map(r=>[esc(r[0]),money(r[1]),money(r[2]),money(r[3])]));
+ let lr=state.lawyers.map(l=>[l.name,state.cases.filter(x=>x.lawyerId===l.id&&x.status!=='مختومه').length,state.cases.filter(x=>x.lawyerId===l.id).length,state.tasks.filter(x=>x.lawyerId===l.id&&x.status!=='انجام شد').length]);
+ document.getElementById('lawyerReport').innerHTML=table(['وکیل','پرونده فعال','کل پرونده','کار باز'],lr.map(r=>r.map(esc)));
+}
+function table(headers,rows){return `<table><thead><tr>${headers.map(x=>`<th>${x}</th>`).join('')}</tr></thead><tbody>${rows.map(r=>`<tr>${r.map(x=>`<td>${x}</td>`).join('')}</tr>`).join('')||`<tr><td colspan="${headers.length}">داده‌ای نیست</td></tr>`}</tbody></table>`}
+function exportCSV(kind){
+ let arr=state[kind]||[];if(!arr.length){toast('داده‌ای برای خروجی نیست');return}
+ let keys=[...new Set(arr.flatMap(x=>Object.keys(x)))],csv='\uFEFF'+keys.join(',')+'\n'+arr.map(x=>keys.map(k=>`"${String(x[k]??'').replace(/"/g,'""')}"`).join(',')).join('\n');
+ downloadBlob(new Blob([csv],{type:'text/csv;charset=utf-8'}),`${kind}-${new Date().toISOString().slice(0,10)}.csv`);
+}
+
+function doSearch(){
+ let q=(document.getElementById('globalSearch').value||'').trim().toLowerCase();if(!q){toast('عبارت جست‌وجو را وارد کنید');return}
+ let out=[];
+ const push=(kind,title,meta)=>out.push(`<div class="item"><div class="title">${esc(kind)}: ${esc(title)}</div><div class="meta">${meta}</div></div>`);
+ state.clients.forEach(x=>{if(JSON.stringify(x).toLowerCase().includes(q))push('موکل',x.name,`کد ملی: ${esc(x.nationalId||'-')} | تلفن: ${esc(x.phone||'-')}`)});
+ state.lawyers.forEach(x=>{if(JSON.stringify(x).toLowerCase().includes(q))push('وکیل',x.name,`پروانه: ${esc(x.license||'-')}`)});
+ state.cases.forEach(x=>{if((JSON.stringify(x)+' '+clientName(x.clientId)+' '+lawyerName(x.lawyerId)).toLowerCase().includes(q))push('پرونده',x.title,`موکل: ${esc(clientName(x.clientId))} | شماره: ${esc(x.caseNo||'-')} | طرف مقابل: ${esc(x.opponent||'-')}`)});
+ state.contracts.forEach(x=>{if((JSON.stringify(x)+' '+clientName(x.clientId)).toLowerCase().includes(q))push('قرارداد',x.number||x.type||'-',`موکل: ${esc(clientName(x.clientId))} | مبلغ: ${money(x.amount)} تومان`)});
+ state.checks.forEach(x=>{if((JSON.stringify(x)+' '+clientName(x.clientId)).toLowerCase().includes(q))push('چک',x.checkNo||x.sayad||'-',`موکل: ${esc(clientName(x.clientId))} | مبلغ: ${money(x.amount)} | ${esc(x.status||'-')}`)});
+ state.timeline.forEach(x=>{if((JSON.stringify(x)+' '+caseName(x.caseId)).toLowerCase().includes(q))push('گردش پرونده',x.type||'-',`${esc(caseName(x.caseId))} | ${esc(x.description||'')}`)});
+ document.getElementById('searchResults').innerHTML=out.join('')||empty();
+}
+
+function openDocsDB(){return new Promise((res,rej)=>{let r=indexedDB.open(DB_NAME,1);r.onupgradeneeded=()=>{if(!r.result.objectStoreNames.contains(STORE))r.result.createObjectStore(STORE,{keyPath:'id'})};r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)})}
+async function idbPut(obj){let d=await openDocsDB();return new Promise((res,rej)=>{let t=d.transaction(STORE,'readwrite');t.objectStore(STORE).put(obj);t.oncomplete=()=>{d.close();res()};t.onerror=()=>rej(t.error)})}
+async function idbAll(){let d=await openDocsDB();return new Promise((res,rej)=>{let r=d.transaction(STORE).objectStore(STORE).getAll();r.onsuccess=()=>{d.close();res(r.result||[])};r.onerror=()=>rej(r.error)})}
+async function idbGet(id){let d=await openDocsDB();return new Promise((res,rej)=>{let r=d.transaction(STORE).objectStore(STORE).get(id);r.onsuccess=()=>{d.close();res(r.result)};r.onerror=()=>rej(r.error)})}
+async function idbDelete(id){let d=await openDocsDB();return new Promise((res,rej)=>{let t=d.transaction(STORE,'readwrite');t.objectStore(STORE).delete(id);t.oncomplete=()=>{d.close();res()};t.onerror=()=>rej(t.error)})}
+async function idbClear(){let d=await openDocsDB();return new Promise((res,rej)=>{let t=d.transaction(STORE,'readwrite');t.objectStore(STORE).clear();t.oncomplete=()=>{d.close();res()};t.onerror=()=>rej(t.error)})}
+
+async function saveDocument(e){
+ e.preventDefault();let file=document.getElementById('docFile').files[0];if(!file){toast('فایل انتخاب نشده');return}
+ let f=formData(e.target),obj={id:uid(),title:f.title,category:f.category,clientId:f.clientId,caseId:f.caseId,notes:f.notes,fileName:file.name,mime:file.type,size:file.size,createdAt:new Date().toISOString(),blob:file};
+ try{await idbPut(obj);e.target.reset();renderDocuments();toast('سند ذخیره شد')}catch(err){toast('ذخیره سند در این مرورگر ممکن نشد')}
+}
+async function renderDocuments(){
+ let list=document.getElementById('docList');if(!list)return;
+ try{
+  let docs=await idbAll(),q=(document.getElementById('docSearch')?.value||'').toLowerCase(),cf=document.getElementById('docCaseFilter')?.value||'';
+  docs=docs.filter(x=>(!cf||x.caseId===cf)&&((JSON.stringify({...x,blob:undefined})+' '+clientName(x.clientId)+' '+caseName(x.caseId)).toLowerCase().includes(q))).sort((a,b)=>b.createdAt.localeCompare(a.createdAt));
+  list.innerHTML=docs.map(x=>`<div class="item"><div class="row"><div class="title">${esc(x.title)}</div><span class="badge">${esc(x.category)}</span></div><div class="meta">موکل: ${esc(clientName(x.clientId))} | پرونده: ${esc(caseName(x.caseId))}<br>فایل: ${esc(x.fileName)} | ${(x.size/1024).toFixed(0)} KB</div><div class="actions"><button class="secondary" onclick="downloadDocument('${x.id}')">باز/دریافت</button>${currentUser.role==='admin'?`<button class="danger" onclick="deleteDocument('${x.id}')">حذف</button>`:''}</div></div>`).join('')||empty();
+ }catch(e){list.innerHTML='<div class="empty">مرورگر اجازه دسترسی به بایگانی فایل‌ها را نداد.</div>'}
+}
+async function downloadDocument(id){let x=await idbGet(id);if(!x)return;downloadBlob(x.blob,x.fileName)}
+async function deleteDocument(id){if(currentUser.role!=='admin')return;if(confirm('سند حذف شود؟')){await idbDelete(id);renderDocuments()}}
+function downloadBlob(blob,name){let u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),1000)}
+
+async function exportBackup(includeDocs){
+ let pkg={type:'legal-office-backup',version:2,createdAt:new Date().toISOString(),state};
+ if(includeDocs){toast('در حال آماده‌سازی اسناد...');let docs=await idbAll();pkg.documents=[];for(let d of docs){let b64=await blobToBase64(d.blob);pkg.documents.push({...d,blobBase64:b64,blob:undefined})}}
+ downloadBlob(new Blob([JSON.stringify(pkg)],{type:'application/json'}),`legal-office-${includeDocs?'full-':'data-'}backup-${new Date().toISOString().slice(0,10)}.json`);toast('فایل پشتیبان ساخته شد');
+}
+async function exportEncryptedBackup(){
+ let pass=prompt('یک رمز قوی برای فایل پشتیبان وارد کنید:');if(!pass)return;if(pass.length<6){toast('رمز حداقل ۶ کاراکتر باشد');return}
+ let docs=await idbAll(),pkg={type:'legal-office-backup',version:2,createdAt:new Date().toISOString(),state,documents:[]};
+ for(let d of docs){pkg.documents.push({...d,blobBase64:await blobToBase64(d.blob),blob:undefined})}
+ let enc=new TextEncoder(),salt=crypto.getRandomValues(new Uint8Array(16)),iv=crypto.getRandomValues(new Uint8Array(12));
+ let keyMat=await crypto.subtle.importKey('raw',enc.encode(pass),'PBKDF2',false,['deriveKey']);
+ let key=await crypto.subtle.deriveKey({name:'PBKDF2',salt,iterations:150000,hash:'SHA-256'},keyMat,{name:'AES-GCM',length:256},false,['encrypt']);
+ let ct=await crypto.subtle.encrypt({name:'AES-GCM',iv},key,enc.encode(JSON.stringify(pkg)));
+ let wrapper={type:'legal-office-encrypted',salt:bytesB64(salt),iv:bytesB64(iv),cipher:bytesB64(new Uint8Array(ct))};
+ downloadBlob(new Blob([JSON.stringify(wrapper)],{type:'application/json'}),`legal-office-secure-${new Date().toISOString().slice(0,10)}.lgoffice`);toast('پشتیبان رمزدار ساخته شد');
+}
+async function restoreBackup(e){
+ let f=e.target.files[0];if(!f)return;try{
+  let text=await f.text(),obj=JSON.parse(text),pkg=obj;
+  if(obj.type==='legal-office-encrypted'){
+   let pass=prompt('رمز فایل پشتیبان را وارد کنید:');if(!pass)return;
+   let enc=new TextEncoder(),keyMat=await crypto.subtle.importKey('raw',enc.encode(pass),'PBKDF2',false,['deriveKey']);
+   let key=await crypto.subtle.deriveKey({name:'PBKDF2',salt:b64Bytes(obj.salt),iterations:150000,hash:'SHA-256'},keyMat,{name:'AES-GCM',length:256},false,['decrypt']);
+   let pt=await crypto.subtle.decrypt({name:'AES-GCM',iv:b64Bytes(obj.iv)},key,b64Bytes(obj.cipher));pkg=JSON.parse(new TextDecoder().decode(pt));
+  }
+  if(pkg.type!=='legal-office-backup'||!pkg.state)throw new Error('invalid');
+  if(!confirm('اطلاعات فعلی با پشتیبان جایگزین شود؟'))return;
+  state=pkg.state;persist();await idbClear();
+  if(pkg.documents){for(let d of pkg.documents){let blob=base64ToBlob(d.blobBase64,d.mime||'application/octet-stream');delete d.blobBase64;await idbPut({...d,blob})}}
+  let sid=sessionStorage.getItem(SESSION_KEY);currentUser=find(state.users,sid)||state.users.find(x=>x.role==='admin');sessionStorage.setItem(SESSION_KEY,currentUser.id);
+  startApp();toast('بازیابی انجام شد');
+ }catch(err){console.error(err);toast('فایل پشتیبان معتبر نیست یا رمز اشتباه است')}finally{e.target.value=''}
+}
+async function clearAllData(){if(currentUser.role!=='admin'){toast('فقط مدیر');return}if(confirm('تمام اطلاعات و اسناد پاک شود؟')&&confirm('مطمئن هستید؟ این کار قابل بازگشت نیست.')){state=defaultState();localStorage.removeItem(DATA_KEY);await idbClear();await ensureAdmin();logout();toast('اطلاعات پاک شد')}}
+function blobToBase64(blob){return new Promise((res,rej)=>{let r=new FileReader();r.onload=()=>res(r.result);r.onerror=rej;r.readAsDataURL(blob)})}
+function base64ToBlob(dataUrl,mime){let b64=dataUrl.includes(',')?dataUrl.split(',')[1]:dataUrl,bin=atob(b64),arr=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)arr[i]=bin.charCodeAt(i);return new Blob([arr],{type:mime})}
+function bytesB64(arr){let s='';arr.forEach(b=>s+=String.fromCharCode(b));return btoa(s)}
+function b64Bytes(s){let b=atob(s),a=new Uint8Array(b.length);for(let i=0;i<b.length;i++)a[i]=b.charCodeAt(i);return a}
+
+// --- Jalali date conversion (for deadline countdown) ---
+function div(a,b){return ~~(a/b)} function mod(a,b){return a-~~(a/b)*b}
+function jalCal(jy){let breaks=[-61,9,38,199,426,686,756,818,1111,1181,1210,1635,2060,2097,2192,2262,2324,2394,2456,3178],bl=breaks.length,gy=jy+621,leapJ=-14,jp=breaks[0],jm,jump,leap,n,i;if(jy<jp||jy>=breaks[bl-1])throw Error();for(i=1;i<bl;i++){jm=breaks[i];jump=jm-jp;if(jy<jm)break;leapJ=leapJ+div(jump,33)*8+div(mod(jump,33),4);jp=jm}n=jy-jp;leapJ=leapJ+div(n,33)*8+div(mod(n,33)+3,4);if(mod(jump,33)===4&&jump-n===4)leapJ+=1;let leapG=div(gy,4)-div((div(gy,100)+1)*3,4)-150;let march=20+leapJ-leapG;if(jump-n<6)n=n-jump+div(jump+4,33)*33;leap=mod(mod(n+1,33)-1,4);if(leap===-1)leap=4;return {leap,gy,march}}
+function g2d(gy,gm,gd){let d=div((gy+div(gm-8,6)+100100)*1461,4)+div(153*mod(gm+9,12)+2,5)+gd-34840408;d=d-div(div(gy+100100+div(gm-8,6),100)*3,4)+752;return d}
+function d2g(jdn){let j=4*jdn+139361631;j=j+div(div(4*jdn+183187720,146097)*3,4)*4-3908;let i=div(mod(j,1461),4)*5+308;let gd=div(mod(i,153),5)+1,gm=mod(div(i,153),12)+1,gy=div(j,1461)-100100+div(8-gm,6);return {gy,gm,gd}}
+function j2d(jy,jm,jd){let r=jalCal(jy);return g2d(r.gy,3,r.march)+(jm-1)*31-div(jm,7)*(jm-7)+jd-1}
+function jalaliToGregorian(s){try{let p=s.replace(/-/g,'/').split('/').map(Number);if(p.length<3||!p[0])return null;return d2g(j2d(p[0],p[1],p[2]))}catch(e){return null}}
+function daysUntilJalali(s){let g=jalaliToGregorian(s);if(!g)return null;let target=new Date(g.gy,g.gm-1,g.gd),now=new Date();now.setHours(0,0,0,0);return Math.round((target-now)/86400000)}
+
+async function boot(){
+ await ensureAdmin();
+ document.getElementById('loginTitle').textContent=state.settings.instituteName||'سامانه جامع مدیریت موسسه حقوقی';
+ let sid=sessionStorage.getItem(SESSION_KEY);let u=find(state.users,sid);
+ if(u&&u.active!=='0'){currentUser=u;startApp()}else document.getElementById('loginScreen').classList.remove('hidden');
+}
+boot();
+
+</script>
+
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js').catch(()=>{});
+  });
+}
+</script>
+
+</body>
+</html>

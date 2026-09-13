@@ -187,7 +187,7 @@ function canAdd(kind){
 function canEdit(kind){
  if(!profile)return false;
  if(profile.role==='admin')return true;
- if(profile.role==='internal_manager')return false;
+ if(profile.role==='internal_manager')return ['clients','lawyers'].includes(kind);
  if(profile.role==='lawyer')return ['clients','cases','deadlines','tasks','timeline','documents'].includes(kind);
  if(profile.role==='accountant')return ['clients','contracts','payments','checks','expenses'].includes(kind);
  if(profile.role==='secretary')return ['clients','lawyers','cases','deadlines','tasks','timeline','documents'].includes(kind);

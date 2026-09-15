@@ -74,7 +74,7 @@ input,select,textarea{width:100%;margin-top:5px;border:1px solid #c8d2db;border-
 <div id="app" class="hidden">
 <header>
   <div><h1 id="brandTitle">⚖️ سامانه جامع مدیریت موسسه حقوقی</h1><small id="currentUserLabel"></small></div>
-  <div class="header-actions"><button class="iconbtn" onclick="showView('search')">🔎</button><button class="iconbtn" onclick="logout()">خروج</button></div>
+  <div class="header-actions"><button id="hearingAlertBtn" class="iconbtn" onclick="enableHearingAlerts()">🔔 هشدار جلسات</button><button class="iconbtn" onclick="showView('search')">🔎</button><button class="iconbtn" onclick="logout()">خروج</button></div>
 </header>
 <nav id="nav">
   <button data-view="dashboard">داشبورد</button><button data-view="clients">موکلین</button><button data-view="lawyers">وکلا</button>
@@ -85,7 +85,8 @@ input,select,textarea{width:100%;margin-top:5px;border:1px solid #c8d2db;border-
 </nav>
 <main>
 <section id="dashboard" class="view">
-  <div class="section-head"><h2>داشبورد مدیریت</h2><button class="secondary" onclick="loadAll(true)">↻ بروزرسانی</button></div>
+  <div class="section-head"><h2>داشبورد مدیریت</h2><div class="actions"><button class="secondary" onclick="enableHearingAlerts()">🔔 فعال‌سازی زنگ جلسات</button><button class="secondary" onclick="loadAll(true)">↻ بروزرسانی</button></div></div>
+  <div id="hearingAlertNotice" class="notice" style="margin-bottom:12px">هشدار جلسات: برای دریافت اعلان و زنگ، یک‌بار دکمه «فعال‌سازی زنگ جلسات» را بزنید.</div>
   <div class="cards">
     <div class="card"><small>موکلین</small><b id="sClients">0</b></div><div class="card"><small>پرونده‌های فعال</small><b id="sCases">0</b></div>
     <div class="card"><small>وکلا</small><b id="sLawyers">0</b></div><div class="card"><small>قراردادها</small><b id="sContracts">0</b></div>
@@ -108,7 +109,7 @@ input,select,textarea{width:100%;margin-top:5px;border:1px solid #c8d2db;border-
    <input type="hidden" name="editId"><label>عنوان سند<input name="title" required></label>
    <label>دسته‌بندی<select name="category"><option>دادنامه</option><option>دادخواست</option><option>لایحه</option><option>قرارداد</option><option>وکالتنامه</option><option>کارشناسی</option><option>رسید/فیش</option><option>اظهارنامه</option><option>سایر</option></select></label>
    <label>موکل<select name="client_id" id="docClient"></select></label><label>پرونده<select name="case_id" id="docCase"></select></label>
-   <label class="wide">توضیحات<textarea name="notes"></textarea></label><label class="wide file-label">فایل<input id="docFile" type="file" required></label>
+   <label class="wide">توضیحات<textarea name="notes"></textarea></label><label class="wide file-label">فایل<input id="docFile" type="file"></label>
    <div class="wide"><button class="primary">بارگذاری در فضای ابری</button></div>
  </form></div>
  <div class="panel"><div class="filterbar"><input id="docSearch" placeholder="جست‌وجوی اسناد..." oninput="renderDocuments()"></div><div id="documentsList" class="list"></div></div>
@@ -187,7 +188,7 @@ function canAdd(kind){
 function canEdit(kind){
  if(!profile)return false;
  if(profile.role==='admin')return true;
- if(profile.role==='internal_manager')return ['clients','lawyers'].includes(kind);
+ if(profile.role==='internal_manager')return ['clients','lawyers','cases','deadlines','tasks','timeline','documents'].includes(kind);
  if(profile.role==='lawyer')return ['clients','cases','deadlines','tasks','timeline','documents'].includes(kind);
  if(profile.role==='accountant')return ['clients','contracts','payments','checks','expenses'].includes(kind);
  if(profile.role==='secretary')return ['clients','lawyers','cases','deadlines','tasks','timeline','documents'].includes(kind);
@@ -212,7 +213,7 @@ document.querySelectorAll('#nav button').forEach(b=>b.onclick=()=>showView(b.dat
 async function login(email,password){
  const {data:r,error}=await sb.auth.signInWithPassword({email,password}); if(error)throw error; return r.user;
 }
-async function logout(){await sb.auth.signOut();currentUser=null;profile=null;clearInterval(pollTimer);document.getElementById('app').classList.add('hidden');document.getElementById('loginScreen').classList.remove('hidden')}
+async function logout(){await sb.auth.signOut();currentUser=null;profile=null;clearInterval(pollTimer);clearInterval(hearingAlertTimer);document.getElementById('app').classList.add('hidden');document.getElementById('loginScreen').classList.remove('hidden')}
 document.getElementById('loginForm').onsubmit=async e=>{
  e.preventDefault();let f=formData(e.target);try{document.getElementById('loginScreen').classList.add('loading');await login(f.email,f.password);await bootApp()}catch(err){toast('ورود ناموفق: '+(err.message||err))}finally{document.getElementById('loginScreen').classList.remove('loading')}
 };
@@ -225,7 +226,10 @@ async function bootApp(){
  currentUser=session.user;await fetchProfile();buildViews();applyPermissions();document.getElementById('loginScreen').classList.add('hidden');document.getElementById('app').classList.remove('hidden');
  document.getElementById('currentUserLabel').innerHTML=`${esc(profile.full_name||currentUser.email)} — ${esc(roleName(profile.role))} — <span class="${navigator.onLine?'online':'offline'}">${navigator.onLine?'آنلاین':'آفلاین'}</span>`;
  await loadAll(false);showView(can('dashboard')?'dashboard':'search');
+ updateHearingAlertNotice();
+ setTimeout(()=>checkHearingAlerts(false),1200);
  clearInterval(pollTimer);pollTimer=setInterval(()=>{if(navigator.onLine)loadAll(false,true)},30000);
+ clearInterval(hearingAlertTimer);hearingAlertTimer=setInterval(()=>checkHearingAlerts(false),15*60*1000);
 }
 window.addEventListener('online',()=>{toast('اتصال اینترنت برقرار شد');loadAll(false)});
 window.addEventListener('offline',()=>toast('اینترنت قطع است؛ ثبت اطلاعات جدید ممکن نیست'));
@@ -238,7 +242,7 @@ async function loadAll(showToast=false,silent=false){
     q('clients'),q('lawyers'),q('cases'),q('contracts'),q('payments'),q('checks'),q('expenses'),q('deadlines'),q('tasks'),q('case_timeline'),q('documents'),
     sb.from('profiles').select('*').order('created_at',{ascending:true}).then(({data,error})=>{if(error)throw error;return data||[]})
   ]);
-  Object.assign(data,{clients,lawyers,cases,contracts,payments,checks,expenses,deadlines,tasks,timeline,documents,profiles});renderAll();if(showToast)toast('اطلاعات از سرور بروزرسانی شد');
+  Object.assign(data,{clients,lawyers,cases,contracts,payments,checks,expenses,deadlines,tasks,timeline,documents,profiles});renderAll();updateHearingAlertNotice();if(showToast)toast('اطلاعات از سرور بروزرسانی شد');
  }catch(err){if(!silent)toast('خطا در دریافت اطلاعات: '+(err.message||err))}
  finally{document.getElementById('app').classList.remove('loading')}
 }
@@ -323,19 +327,61 @@ function renderTasks(){document.getElementById('tasksList').innerHTML=data.tasks
 function renderTimeline(){let f=document.getElementById('timelineFilter')?.value||'',a=data.timeline.filter(x=>!f||x.case_id===f);document.getElementById('timelineList').innerHTML=a.map(x=>`<div class="item"><div class="title">${esc(x.event_date||'-')} — ${esc(x.event_type||'رویداد')}</div><div class="meta">پرونده: ${esc(caseName(x.case_id))}<br>${esc(x.description||'')}</div>${buttons('timeline',x.id)}</div>`).join('')||empty()}
 
 async function saveDocument(e){
- e.preventDefault();if(!canAdd('documents')){toast('دسترسی بارگذاری سند ندارید');return}
- const f=e.target,file=document.getElementById('docFile').files[0];if(!file){toast('فایل انتخاب نشده');return}
- const d=formData(f),ext=file.name.includes('.')?'.'+file.name.split('.').pop():'',path=`${currentUser.id}/${Date.now()}_${Math.random().toString(36).slice(2)}${ext}`;
+ e.preventDefault();
+ const f=e.target,d=formData(f),edit=d.editId,file=document.getElementById('docFile').files[0];
+
+ if(edit){
+   if(!canEdit('documents')){toast('این سطح دسترسی اجازه ویرایش سند را ندارد');return}
+   try{
+     f.classList.add('loading');
+     const {error}=await sb.from('documents').update({
+       client_id:d.client_id||null,
+       case_id:d.case_id||null,
+       title:d.title,
+       category:d.category,
+       notes:d.notes||null
+     }).eq('id',edit);
+     if(error)throw error;
+     f.reset();f.elements.editId.value='';
+     document.querySelector('#documentsForm button.primary').textContent='بارگذاری در فضای ابری';
+     await loadAll(false);toast('مشخصات سند ویرایش شد');
+   }catch(err){toast('خطای ویرایش سند: '+(err.message||err))}
+   finally{f.classList.remove('loading')}
+   return;
+ }
+
+ if(!canAdd('documents')){toast('دسترسی بارگذاری سند ندارید');return}
+ if(!file){toast('فایل انتخاب نشده');return}
+ const ext=file.name.includes('.')?'.'+file.name.split('.').pop():'',path=`${currentUser.id}/${Date.now()}_${Math.random().toString(36).slice(2)}${ext}`;
  try{
   f.classList.add('loading');
   let up=await sb.storage.from('legal-documents').upload(path,file,{upsert:false});if(up.error)throw up.error;
-  let ins=await sb.from('documents').insert({client_id:d.client_id||null,case_id:d.case_id||null,title:d.title,category:d.category,file_path:path,file_name:file.name,mime_type:file.type,file_size:file.size,notes:d.notes||null,created_by:currentUser.id});if(ins.error)throw ins.error;
+  let ins=await sb.from('documents').insert({
+    client_id:d.client_id||null,case_id:d.case_id||null,title:d.title,category:d.category,
+    file_path:path,file_name:file.name,mime_type:file.type,file_size:file.size,
+    notes:d.notes||null,created_by:currentUser.id
+  });
+  if(ins.error)throw ins.error;
   f.reset();await loadAll(false);toast('سند در فضای ابری ذخیره شد');
  }catch(err){toast('خطای سند: '+(err.message||err))}finally{f.classList.remove('loading')}
 }
+
+function editDocument(id){
+ const x=find('documents',id),f=document.getElementById('documentsForm');if(!x||!f)return;
+ if(!canEdit('documents')){toast('اجازه ویرایش سند ندارید');return}
+ f.elements.editId.value=x.id;
+ f.elements.title.value=x.title||'';
+ f.elements.category.value=x.category||'سایر';
+ f.elements.client_id.value=x.client_id||'';
+ f.elements.case_id.value=x.case_id||'';
+ f.elements.notes.value=x.notes||'';
+ document.querySelector('#documentsForm button.primary').textContent='ذخیره ویرایش';
+ showView('documents');window.scrollTo({top:0,behavior:'smooth'});
+}
+
 async function downloadDoc(id){let x=find('documents',id);if(!x)return;let {data:r,error}=await sb.storage.from('legal-documents').createSignedUrl(x.file_path,60);if(error){toast(error.message);return}window.open(r.signedUrl,'_blank')}
 async function deleteDoc(id){if(!canDelete()){toast('فقط مدیر');return}let x=find('documents',id);if(!x||!confirm('سند حذف شود؟'))return;await sb.storage.from('legal-documents').remove([x.file_path]);let {error}=await sb.from('documents').delete().eq('id',id);if(error){toast(error.message);return}await loadAll(false)}
-function renderDocuments(){let qv=(document.getElementById('docSearch')?.value||'').toLowerCase();document.getElementById('documentsList').innerHTML=data.documents.filter(x=>(JSON.stringify(x)+' '+clientName(x.client_id)+' '+caseName(x.case_id)).toLowerCase().includes(qv)).map(x=>`<div class="item"><div class="row"><div class="title">${esc(x.title)}</div><span class="badge">${esc(x.category||'-')}</span></div><div class="meta">موکل: ${esc(clientName(x.client_id))} | پرونده: ${esc(caseName(x.case_id))}<br>فایل: ${esc(x.file_name||'-')}</div><div class="actions"><button class="secondary" onclick="downloadDoc('${x.id}')">باز/دریافت</button>${canDelete()?`<button class="danger" onclick="deleteDoc('${x.id}')">حذف</button>`:''}</div></div>`).join('')||empty()}
+function renderDocuments(){let qv=(document.getElementById('docSearch')?.value||'').toLowerCase();document.getElementById('documentsList').innerHTML=data.documents.filter(x=>(JSON.stringify(x)+' '+clientName(x.client_id)+' '+caseName(x.case_id)).toLowerCase().includes(qv)).map(x=>`<div class="item"><div class="row"><div class="title">${esc(x.title)}</div><span class="badge">${esc(x.category||'-')}</span></div><div class="meta">موکل: ${esc(clientName(x.client_id))} | پرونده: ${esc(caseName(x.case_id))}<br>فایل: ${esc(x.file_name||'-')}</div><div class="actions"><button class="secondary" onclick="downloadDoc('${x.id}')">باز/دریافت</button>${canEdit('documents')?`<button class="secondary" onclick="editDocument('${x.id}')">ویرایش</button>`:''}${canDelete()?`<button class="danger" onclick="deleteDoc('${x.id}')">حذف</button>`:''}</div></div>`).join('')||empty()}
 
 function renderDashboard(){
  let ct=data.contracts.reduce((a,x)=>a+Number(x.amount||0),0),paid=data.payments.reduce((a,x)=>a+Number(x.amount||0),0),ex=data.expenses.reduce((a,x)=>a+Number(x.amount||0),0),checks=data.checks.filter(x=>!['وصول شده','مسترد شده'].includes(x.status)).reduce((a,x)=>a+Number(x.amount||0),0);
@@ -405,6 +451,134 @@ document.getElementById('recoveryForm').onsubmit = async (e) => {
     e.target.classList.remove('loading');
   }
 };
+
+
+let hearingAlertTimer=null;
+let hearingAudioCtx=null;
+
+function normalizeDigits(v){
+ return String(v??'')
+  .replace(/[۰-۹]/g,d=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(d))
+  .replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d));
+}
+
+function div(a,b){return ~~(a/b)}
+function mod(a,b){return a-~~(a/b)*b}
+
+function jalaliToGregorian(jy,jm,jd){
+ jy=Number(jy);jm=Number(jm);jd=Number(jd);
+ jy+=1595;
+ let days=-355668+(365*jy)+div(jy,33)*8+div(mod(jy,33)+3,4)+jd+(jm<7?(jm-1)*31:((jm-7)*30)+186);
+ let gy=400*div(days,146097);days=mod(days,146097);
+ if(days>36524){gy+=100*div(--days,36524);days=mod(days,36524);if(days>=365)days++}
+ gy+=4*div(days,1461);days=mod(days,1461);
+ if(days>365){gy+=div(days-1,365);days=mod(days-1,365)}
+ let gd=days+1;
+ let sal_a=[0,31,((gy%4===0&&gy%100!==0)||gy%400===0)?29:28,31,30,31,30,31,31,30,31,30,31];
+ let gm=1;
+ for(;gm<=12&&gd>sal_a[gm];gm++)gd-=sal_a[gm];
+ return [gy,gm,gd];
+}
+
+function parseMeetingDate(v){
+ v=normalizeDigits(v).trim();
+ if(!v)return null;
+ let m=v.match(/^(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})$/);
+ if(!m)return null;
+ let y=Number(m[1]),mo=Number(m[2]),d=Number(m[3]);
+ if(y<1700)[y,mo,d]=jalaliToGregorian(y,mo,d);
+ let dt=new Date(y,mo-1,d,12,0,0,0);
+ return isNaN(dt.getTime())?null:dt;
+}
+
+function daysUntil(v){
+ let target=parseMeetingDate(v);if(!target)return null;
+ let now=new Date(),today=new Date(now.getFullYear(),now.getMonth(),now.getDate(),12,0,0,0);
+ return Math.round((target-today)/86400000);
+}
+
+function isHearingDeadline(x){
+ return x && x.status==='باز' && /جلسه|رسیدگی/.test((x.deadline_type||'')+' '+(x.title||''));
+}
+
+function playHearingAlarm(){
+ try{
+  const Ctx=window.AudioContext||window.webkitAudioContext;
+  if(!Ctx)return;
+  if(!hearingAudioCtx)hearingAudioCtx=new Ctx();
+  if(hearingAudioCtx.state==='suspended')hearingAudioCtx.resume();
+  const base=hearingAudioCtx.currentTime;
+  [0,.45,.9].forEach((off,i)=>{
+    const o=hearingAudioCtx.createOscillator(),g=hearingAudioCtx.createGain();
+    o.type='sine';o.frequency.value=i===1?880:740;
+    g.gain.setValueAtTime(.0001,base+off);
+    g.gain.exponentialRampToValueAtTime(.28,base+off+.03);
+    g.gain.exponentialRampToValueAtTime(.0001,base+off+.28);
+    o.connect(g);g.connect(hearingAudioCtx.destination);
+    o.start(base+off);o.stop(base+off+.3);
+  });
+ }catch(e){}
+}
+
+async function showHearingNotification(title,body){
+ try{
+  if(!('Notification' in window) || Notification.permission!=='granted')return;
+  if('serviceWorker' in navigator){
+    const reg=await navigator.serviceWorker.ready;
+    await reg.showNotification(title,{body,icon:'./icon-192.png',badge:'./icon-192.png',tag:title+body,renotify:true});
+  }else{
+    new Notification(title,{body});
+  }
+ }catch(e){}
+}
+
+async function enableHearingAlerts(){
+ try{
+   localStorage.setItem('hearingAlertsEnabled','1');
+   if('Notification' in window && Notification.permission!=='granted'){
+     const p=await Notification.requestPermission();
+     if(p!=='granted')toast('اعلان مرورگر مجاز نشد؛ زنگ داخل برنامه همچنان فعال است');
+   }
+   const Ctx=window.AudioContext||window.webkitAudioContext;
+   if(Ctx){
+     if(!hearingAudioCtx)hearingAudioCtx=new Ctx();
+     if(hearingAudioCtx.state==='suspended')await hearingAudioCtx.resume();
+     playHearingAlarm();
+   }
+   updateHearingAlertNotice();
+   await checkHearingAlerts(true);
+   toast('هشدار جلسات فعال شد');
+ }catch(err){toast('فعال‌سازی هشدار انجام نشد')}
+}
+
+function updateHearingAlertNotice(){
+ const el=document.getElementById('hearingAlertNotice'),btn=document.getElementById('hearingAlertBtn');
+ if(!el)return;
+ const enabled=localStorage.getItem('hearingAlertsEnabled')==='1';
+ const upcoming=data.deadlines.filter(isHearingDeadline).filter(x=>[1,2].includes(daysUntil(x.due_date)));
+ el.textContent=enabled
+   ? `هشدار جلسات فعال است — ${upcoming.length} جلسه در بازه یک یا دو روز آینده`
+   : 'هشدار جلسات غیرفعال است؛ برای دریافت زنگ و اعلان، دکمه فعال‌سازی را بزنید.';
+ if(btn)btn.textContent=enabled?'🔔 هشدار فعال':'🔔 هشدار جلسات';
+}
+
+async function checkHearingAlerts(force=false){
+ if(localStorage.getItem('hearingAlertsEnabled')!=='1')return;
+ const today=new Date().toISOString().slice(0,10);
+ for(const x of data.deadlines.filter(isHearingDeadline)){
+   const diff=daysUntil(x.due_date);
+   if(diff!==1 && diff!==2)continue;
+   const key=`hearingAlert:${currentUser?.id||'user'}:${x.id}:${diff}:${today}`;
+   if(!force && localStorage.getItem(key))continue;
+   const when=diff===2?'دو روز دیگر':'فردا';
+   const body=`${when}: ${x.title} — پرونده: ${caseName(x.case_id)}${x.due_time?` — ساعت ${x.due_time}`:''}`;
+   playHearingAlarm();
+   await showHearingNotification('⚖️ یادآوری جلسه رسیدگی',body);
+   toast(body);
+   localStorage.setItem(key,'1');
+ }
+ updateHearingAlertNotice();
+}
 
 sb.auth.onAuthStateChange((event,session)=>{
   if(event==='PASSWORD_RECOVERY'){

@@ -19,7 +19,7 @@ header h1{font-size:17px;margin:0 0 3px}header small{opacity:.78}.header-actions
 nav{position:sticky;top:68px;z-index:19;display:flex;gap:5px;overflow-x:auto;background:#22364b;padding:7px 8px;scrollbar-width:none}nav::-webkit-scrollbar{display:none}
 nav button{border:0;background:#eef2f6;color:#26384a;border-radius:999px;padding:8px 11px;white-space:nowrap;font-family:inherit;font-size:12px}nav button.active{background:var(--primary);color:#fff}nav button.nav-hidden{display:none}
 main{max-width:1250px;margin:auto;padding:12px}.view{display:none}.view.active{display:block}.section-head{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px}.section-head h2{margin:0;font-size:20px}
-.cards{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}.card{background:var(--card);border-radius:14px;padding:13px;box-shadow:0 1px 5px #0001;border:1px solid #eef1f4}.card small{display:block;color:var(--muted);margin-bottom:5px}.card b{font-size:19px;word-break:break-word}
+.cards{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}.card{background:var(--card);border-radius:14px;padding:13px;box-shadow:0 1px 5px #0001;border:1px solid #eef1f4}.card.clickable{cursor:pointer;transition:.15s transform,.15s box-shadow,.15s border-color}.card.clickable:hover{transform:translateY(-2px);box-shadow:0 5px 14px #0002;border-color:#b9d4ee}.card.clickable:active{transform:scale(.99)}.card small{display:block;color:var(--muted);margin-bottom:5px}.card b{font-size:19px;word-break:break-word}
 .warning-card{border-color:#f0d48c;background:#fffaf0}.panel{background:#fff;border-radius:14px;padding:14px;margin-bottom:12px;box-shadow:0 1px 5px #0001;border:1px solid #edf0f3;overflow:auto}.panel h3{margin:0 0 11px;font-size:16px}
 .two-col{display:grid;grid-template-columns:1fr;gap:12px;margin-top:12px}.form-grid{display:grid;grid-template-columns:1fr;gap:10px}.wide{grid-column:1/-1}label{font-size:12px;font-weight:700}
 input,select,textarea{width:100%;margin-top:5px;border:1px solid #c8d2db;border-radius:9px;padding:10px;font-family:inherit;background:white;color:var(--text)}textarea{min-height:80px;resize:vertical}
@@ -88,14 +88,22 @@ input,select,textarea{width:100%;margin-top:5px;border:1px solid #c8d2db;border-
   <div class="section-head"><h2>داشبورد مدیریت</h2><div class="actions"><button class="secondary" onclick="enableHearingAlerts()">🔔 فعال‌سازی زنگ جلسات</button><button class="secondary" onclick="loadAll(true)">↻ بروزرسانی</button></div></div>
   <div id="hearingAlertNotice" class="notice" style="margin-bottom:12px">هشدار جلسات: برای دریافت اعلان و زنگ، یک‌بار دکمه «فعال‌سازی زنگ جلسات» را بزنید.</div>
   <div class="cards">
-    <div class="card"><small>موکلین</small><b id="sClients">0</b></div><div class="card"><small>پرونده‌های فعال</small><b id="sCases">0</b></div>
-    <div class="card"><small>وکلا</small><b id="sLawyers">0</b></div><div class="card"><small>قراردادها</small><b id="sContracts">0</b></div>
-    <div class="card"><small>ارزش قراردادها</small><b id="sContractValue">0</b><small>تومان</small></div><div class="card"><small>وصول‌شده</small><b id="sPaid">0</b><small>تومان</small></div>
-    <div class="card"><small>مانده قراردادها</small><b id="sReceivable">0</b><small>تومان</small></div><div class="card"><small>چک‌های باز</small><b id="sChecks">0</b><small>تومان</small></div>
-    <div class="card"><small>هزینه‌ها</small><b id="sExpenses">0</b><small>تومان</small></div><div class="card warning-card"><small>مهلت‌های باز</small><b id="sUrgent">0</b></div>
+    <div class="card clickable" onclick="showView('clients')" title="باز کردن موکلین"><small>موکلین</small><b id="sClients">0</b></div>
+    <div class="card clickable" onclick="showView('cases')" title="باز کردن پرونده‌ها"><small>پرونده‌های فعال</small><b id="sCases">0</b></div>
+    <div class="card clickable" onclick="showView('lawyers')" title="باز کردن وکلا"><small>وکلا</small><b id="sLawyers">0</b></div>
+    <div class="card clickable" onclick="showView('contracts')" title="باز کردن قراردادها"><small>قراردادها</small><b id="sContracts">0</b></div>
+    <div class="card clickable" onclick="showView('contracts')" title="باز کردن قراردادها"><small>ارزش قراردادها</small><b id="sContractValue">0</b><small>تومان</small></div>
+    <div class="card clickable" onclick="showView('payments')" title="باز کردن دریافت‌ها"><small>وصول‌شده</small><b id="sPaid">0</b><small>تومان</small></div>
+    <div class="card clickable" onclick="showView('contracts')" title="باز کردن قراردادها"><small>مانده قراردادها</small><b id="sReceivable">0</b><small>تومان</small></div>
+    <div class="card clickable" onclick="showView('checks')" title="باز کردن چک‌ها"><small>چک‌های باز</small><b id="sChecks">0</b><small>تومان</small></div>
+    <div class="card clickable" onclick="showView('expenses')" title="باز کردن هزینه‌ها"><small>هزینه‌ها</small><b id="sExpenses">0</b><small>تومان</small></div>
+    <div class="card warning-card clickable" onclick="showView('deadlines')" title="باز کردن مهلت‌ها و جلسات"><small>مهلت‌های باز</small><b id="sUrgent">0</b></div>
   </div>
-  <div class="two-col"><div class="panel"><h3>مهلت‌های اخیر</h3><div id="dashDeadlines" class="list"></div></div><div class="panel"><h3>کارهای باز</h3><div id="dashTasks" class="list"></div></div></div>
-  <div class="panel"><h3>آخرین پرونده‌ها</h3><div id="dashCases" class="list"></div></div>
+  <div class="two-col">
+    <div class="panel clickable-panel" onclick="showView('deadlines')" style="cursor:pointer"><h3>مهلت‌های اخیر</h3><div id="dashDeadlines" class="list"></div></div>
+    <div class="panel clickable-panel" onclick="showView('tasks')" style="cursor:pointer"><h3>کارهای باز</h3><div id="dashTasks" class="list"></div></div>
+  </div>
+  <div class="panel clickable-panel" onclick="showView('cases')" style="cursor:pointer"><h3>آخرین پرونده‌ها</h3><div id="dashCases" class="list"></div></div>
 </section>
 
 <section id="clients" class="view"></section><section id="lawyers" class="view"></section><section id="cases" class="view"></section>
@@ -386,9 +394,9 @@ function renderDocuments(){let qv=(document.getElementById('docSearch')?.value||
 function renderDashboard(){
  let ct=data.contracts.reduce((a,x)=>a+Number(x.amount||0),0),paid=data.payments.reduce((a,x)=>a+Number(x.amount||0),0),ex=data.expenses.reduce((a,x)=>a+Number(x.amount||0),0),checks=data.checks.filter(x=>!['وصول شده','مسترد شده'].includes(x.status)).reduce((a,x)=>a+Number(x.amount||0),0);
  sClients.textContent=data.clients.length;sCases.textContent=data.cases.filter(x=>x.status!=='مختومه').length;sLawyers.textContent=data.lawyers.length;sContracts.textContent=data.contracts.length;sContractValue.textContent=money(ct);sPaid.textContent=money(paid);sReceivable.textContent=money(Math.max(0,ct-paid));sChecks.textContent=money(checks);sExpenses.textContent=money(ex);sUrgent.textContent=data.deadlines.filter(x=>x.status==='باز').length;
- dashDeadlines.innerHTML=data.deadlines.filter(x=>x.status==='باز').slice(0,8).map(x=>`<div class="item"><div class="title">${esc(x.title)}</div><div class="meta">${esc(caseName(x.case_id))} — ${esc(x.due_date||'-')}</div></div>`).join('')||empty();
- dashTasks.innerHTML=data.tasks.filter(x=>x.status!=='انجام شد').slice(0,8).map(x=>`<div class="item"><div class="title">${esc(x.title)}</div><div class="meta">${esc(caseName(x.case_id))} — ${esc(x.due_date||'-')}</div></div>`).join('')||empty();
- dashCases.innerHTML=data.cases.slice(0,8).map(x=>`<div class="item"><div class="row"><div class="title">${esc(x.title)}</div>${statusBadge(x.status)}</div><div class="meta">موکل: ${esc(clientName(x.client_id))} | ${esc(x.case_no||'-')}</div></div>`).join('')||empty();
+ dashDeadlines.innerHTML=data.deadlines.filter(x=>x.status==='باز').slice(0,8).map(x=>`<div class="item" style="cursor:pointer" onclick="event.stopPropagation();showView('deadlines')"><div class="title">${esc(x.title)}</div><div class="meta">${esc(caseName(x.case_id))} — ${esc(x.due_date||'-')}</div></div>`).join('')||empty();
+ dashTasks.innerHTML=data.tasks.filter(x=>x.status!=='انجام شد').slice(0,8).map(x=>`<div class="item" style="cursor:pointer" onclick="event.stopPropagation();showView('tasks')"><div class="title">${esc(x.title)}</div><div class="meta">${esc(caseName(x.case_id))} — ${esc(x.due_date||'-')}</div></div>`).join('')||empty();
+ dashCases.innerHTML=data.cases.slice(0,8).map(x=>`<div class="item" style="cursor:pointer" onclick="event.stopPropagation();showView('cases')"><div class="row"><div class="title">${esc(x.title)}</div>${statusBadge(x.status)}</div><div class="meta">موکل: ${esc(clientName(x.client_id))} | ${esc(x.case_no||'-')}</div></div>`).join('')||empty();
 }
 function table(headers,rows){return `<table><thead><tr>${headers.map(x=>`<th>${x}</th>`).join('')}</tr></thead><tbody>${rows.map(r=>`<tr>${r.map(x=>`<td>${x}</td>`).join('')}</tr>`).join('')||`<tr><td colspan="${headers.length}">داده‌ای نیست</td></tr>`}</tbody></table>`}
 function renderReports(){

@@ -1,4 +1,4 @@
-const CACHE='legal-office-cloud-v7-full-edit-hearing-alerts';
+const CACHE='legal-office-cloud-v8-clickable-dashboard';
 const LOCAL=['./','./index.html','./manifest.webmanifest','./icon-192.png','./icon-512.png'];
 
 self.addEventListener('install', event => {

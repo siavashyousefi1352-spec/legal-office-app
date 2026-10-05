@@ -7,7 +7,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#172433">
-<title>سامانه جامع مدیریت موسسه حقوقی - نسخه 8.2.1 • Build 20261003-795</title>
+<title>سامانه جامع مدیریت موسسه حقوقی - نسخه 8.2.2 • Build 20261003-795</title>
 <style>
 
 :root{--bg:#f4f6f8;--card:#fff;--text:#1b2733;--muted:#6a7886;--primary:#155fa0;--primary2:#0e4d83;--danger:#b42318;--ok:#18794e;--warn:#9a6700;--line:#e1e7ec;--header-bg:#172433;--nav-bg:#22364b}
@@ -780,7 +780,7 @@ body.bg-gradient-mint{background:linear-gradient(135deg,#ecfdf5,#ffffff 50%,#ecf
 }
 
 
-/* ===== v8.2.1 separate clock/calendar/countdown + settings preview ===== */
+/* ===== v8.2.2 separate clock/calendar/countdown + settings preview ===== */
 .clock-style-digital .analog-clock{display:none}
 .clock-style-digital{justify-content:center;text-align:center}
 .clock-style-digital .digital-clock{font-size:48px}
@@ -842,7 +842,7 @@ body.bg-gradient-mint{background:linear-gradient(135deg,#ecfdf5,#ffffff 50%,#ecf
 .preview-style-colorful .preview-launcher span:nth-child(3n){background:#ddd6fe}
 
 
-/* ===== v8.2.1 separate personal/institute profiles ===== */
+/* ===== v8.2.2 separate personal/institute profiles ===== */
 .personal-profile-card{
   --profile-accent:#2563eb;
   border:1px solid color-mix(in srgb,var(--profile-accent) 26%,var(--line));
@@ -892,7 +892,7 @@ body.bg-gradient-mint{background:linear-gradient(135deg,#ecfdf5,#ffffff 50%,#ecf
 }
 
 
-/* ===== v8.2.1 header: institute center + personal profile right ===== */
+/* ===== v8.2.2 header: institute center + personal profile right ===== */
 header{
   display:grid!important;
   grid-template-columns:minmax(210px,1fr) minmax(280px,1.4fr) minmax(240px,1fr);
@@ -975,14 +975,14 @@ header .profile-strip{display:none!important}
 }
 
 
-/* ===== v8.2.1 work notebook + import center ===== */
+/* ===== v8.2.2 work notebook + import center ===== */
 .workbook-toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.workbook-toolbar input{flex:1;min-width:190px}
 .workbook-breadcrumb{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin:8px 0}.workbook-breadcrumb button{border:0;background:#eef2f6;border-radius:999px;padding:6px 10px;cursor:pointer}
 .workbook-folder-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}.workbook-folder{--folder-color:#2563eb;position:relative;border:0;border-radius:18px;padding:13px;min-height:115px;color:#fff;background:linear-gradient(145deg,color-mix(in srgb,var(--folder-color) 90%,#fff 10%),color-mix(in srgb,var(--folder-color) 72%,#111827 28%));box-shadow:0 10px 24px color-mix(in srgb,var(--folder-color) 24%,transparent);cursor:pointer;text-align:right}.workbook-folder .folder-icon{font-size:28px;display:block;margin-bottom:9px}.workbook-folder .folder-name{font-weight:900;font-size:14px}.workbook-folder .folder-meta{font-size:10px;opacity:.85;margin-top:5px}.workbook-folder .folder-actions{position:absolute;left:8px;top:8px;display:flex;gap:4px}.workbook-folder .folder-actions button{border:1px solid #ffffff38;background:#ffffff1d;color:#fff;border-radius:8px;padding:4px 6px;cursor:pointer}
 .workbook-note-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin-top:10px}.workbook-note{--note-color:#ffffff;border:1px solid var(--line);border-radius:16px;padding:12px;background:var(--note-color);box-shadow:0 3px 12px #0000000c;min-height:150px;position:relative}.workbook-note.pinned::before{content:'📌';position:absolute;left:9px;top:8px}.workbook-note .note-title{font-weight:900;font-size:14px;padding-left:26px}.workbook-note .note-body{white-space:pre-wrap;line-height:1.95;font-size:12px;margin-top:8px;max-height:220px;overflow:auto}.workbook-note .note-meta{font-size:10px;color:var(--muted);margin-top:8px}.workbook-note .note-actions{display:flex;gap:5px;flex-wrap:wrap;margin-top:9px}.workbook-note .note-actions button{padding:6px 8px;font-size:10px}.workbook-empty{padding:24px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:14px}.workbook-split{display:grid;grid-template-columns:1fr;gap:12px}.import-drop{border:2px dashed #b9c7d4;border-radius:14px;padding:14px;text-align:center;background:#f8fbfd}.import-files{display:grid;gap:6px;margin-top:8px}.import-file-item{display:flex;justify-content:space-between;gap:8px;padding:7px;border:1px solid var(--line);border-radius:10px;background:#fff}.workbook-badge{display:inline-flex;border-radius:999px;padding:3px 7px;font-size:9px;background:#eef2ff;color:#4338ca;margin-left:4px}@media(min-width:880px){.workbook-split{grid-template-columns:1.15fr .85fr}}
 
 
-/* ===== v8.2.1 automatic app updater ===== */
+/* ===== v8.2.2 automatic app updater ===== */
 #appUpdateBanner{position:fixed;left:12px;right:12px;bottom:12px;z-index:10050;display:none;align-items:center;justify-content:space-between;gap:10px;background:#0f172a;color:#fff;border:1px solid #ffffff2c;border-radius:16px;padding:11px 13px;box-shadow:0 18px 45px #0005}
 #appUpdateBanner.show{display:flex}
 #appUpdateBanner .update-copy{min-width:0}.update-title{font-weight:900}.update-meta{font-size:11px;opacity:.8;margin-top:3px}
@@ -993,12 +993,13 @@ header .profile-strip{display:none!important}
 @media(max-width:560px){#appUpdateBanner{align-items:flex-start;flex-direction:column}#appUpdateBanner .actions{width:100%}#appUpdateBanner button{flex:1}}
 
 
-/* v8.2.1 hearings and remote update */
+/* v8.2.2 hearings and remote update */
 .hearing-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px}.hearing-card{border:1px solid var(--line);border-radius:16px;padding:12px;background:var(--card)}.hearing-card.held{background:#f0fdf4;border-color:#86efac}.hearing-meta{font-size:11px;color:var(--muted);line-height:1.9;margin-top:5px}.sms-alert-row{display:grid;grid-template-columns:1fr 1fr auto;gap:6px;margin-top:6px}.remote-user-card{border:1px solid var(--line);border-radius:14px;padding:10px;margin-top:8px}.remote-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:7px}.release-box{background:#f2f9ff;border:1px solid #cfe5f8;border-radius:12px;padding:10px}.hearing-result-form{border-top:1px dashed var(--line);margin-top:9px;padding-top:9px}@media(max-width:600px){.sms-alert-row{grid-template-columns:1fr}}
 
 .check-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:6px;margin-top:7px}.check-grid label{display:flex;gap:7px;align-items:center;border:1px solid var(--line);border-radius:10px;padding:7px;background:var(--card)}.check-grid input{width:auto}
 .doc-upload-progress{height:8px;border-radius:999px;background:#e5e7eb;overflow:hidden;margin-top:7px}.doc-upload-progress span{display:block;height:100%;width:0;background:#2563eb;transition:.2s}
 
+.stage-form-tools{display:flex;align-items:center;gap:8px;flex-wrap:wrap;border:1px dashed var(--line);border-radius:10px;padding:7px;background:#f8fafc}.stage-form-tools small{color:var(--muted)}
 .stage-folders{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:7px;margin-top:9px}.stage-folder{border:1px solid var(--line);border-radius:12px;padding:9px;background:#f8fafc;cursor:pointer;text-align:center}.stage-folder b{display:block}.stage-folder small{color:var(--muted)}
 </style>
 
@@ -1027,7 +1028,7 @@ window.addEventListener('error',function(ev){
 <body>
 <div id="appUpdateBanner"><div class="update-copy"><div class="update-title">نسخه جدید برنامه آماده است</div><div id="appUpdateMeta" class="update-meta">برای دریافت آخرین نسخه، به‌روزرسانی را بزنید.</div></div><div class="actions"><button class="update-now" onclick="applyAppUpdate()">به‌روزرسانی الآن</button><button class="update-later" onclick="hideAppUpdateBanner()">بعداً</button></div></div>
 <div id="toast"></div>
-<div style="position:fixed;left:8px;top:8px;z-index:999;background:#ffffffdd;border:1px solid #dbe3ea;border-radius:999px;padding:5px 9px;font:11px Tahoma;color:#405060">نسخه 8.2.1 کارت‌های پیشرفته و رنگ‌های پیش‌فرض</div>
+<div style="position:fixed;left:8px;top:8px;z-index:999;background:#ffffffdd;border:1px solid #dbe3ea;border-radius:999px;padding:5px 9px;font:11px Tahoma;color:#405060">نسخه 8.2.2 کارت‌های پیشرفته و رنگ‌های پیش‌فرض</div>
 
 <section id="loginScreen" class="login-screen">
   <div class="login-card">
@@ -1420,7 +1421,7 @@ window.addEventListener('error',function(ev){
   </div>
 </section>
 
-<section id="users" class="view"><div id="remoteDeviceAdminPanel" class="panel hidden"><h3>📲 مدیریت کاربران و دستگاه‌ها</h3><div class="note-blue">مدیر می‌تواند برای دستگاه کاربر فرمان به‌روزرسانی یا بازیابی بفرستد. کاربر پس از نصب اولیه، برنامه را از آیکون خودش باز می‌کند.</div><div class="release-box"><b>نسخه مرکزی: <span id="serverReleaseVersion">8.2.1</span></b><div class="actions"><button class="primary" onclick="forceUpdateAllUsers()">به‌روزرسانی همه کاربران</button></div></div><div id="remoteUsersList"></div></div>
+<section id="users" class="view"><div id="remoteDeviceAdminPanel" class="panel hidden"><h3>📲 مدیریت کاربران و دستگاه‌ها</h3><div class="note-blue">مدیر می‌تواند برای دستگاه کاربر فرمان به‌روزرسانی یا بازیابی بفرستد. کاربر پس از نصب اولیه، برنامه را از آیکون خودش باز می‌کند.</div><div class="release-box"><b>نسخه مرکزی: <span id="serverReleaseVersion">8.2.2</span></b><div class="actions"><button class="primary" onclick="forceUpdateAllUsers()">به‌روزرسانی همه کاربران</button></div></div><div id="remoteUsersList"></div></div>
   <div class="section-head"><h2>کاربران موسسه</h2><button class="secondary" onclick="renderUsers()">↻</button></div>
   <div class="note-blue">کاربران از Supabase Authentication خوانده می‌شوند. مدیر می‌تواند تنظیمات هشدار و عکس پروفایل هر کاربر را مدیریت کند؛ هر کاربر عادی فقط اطلاعات و هشدارهای خودش را می‌بیند.</div>
   <div class="panel"><div id="userList" class="list"></div></div>
@@ -1658,7 +1659,7 @@ window.addEventListener('error',function(ev){
   </div>
   <div class="panel">
     <h3>🔄 به‌روزرسانی برنامه</h3>
-    <div class="note-blue">نسخه فعلی: <b>8.2.1</b>. از این نسخه به بعد، برنامه خودش نسخه جدید را بررسی می‌کند و دیگر لازم نیست برنامه را حذف و دوباره نصب کنید.</div>
+    <div class="note-blue">نسخه فعلی: <b>8.2.2</b>. از این نسخه به بعد، برنامه خودش نسخه جدید را بررسی می‌کند و دیگر لازم نیست برنامه را حذف و دوباره نصب کنید.</div>
     <div class="actions" style="margin-top:10px"><button type="button" class="primary" onclick="checkForAppUpdate(true)">بررسی نسخه جدید</button><button type="button" class="secondary" onclick="hardRefreshApp()">دریافت اجباری آخرین نسخه</button></div>
   </div>
 
@@ -2905,7 +2906,7 @@ function buildViews(){
  <label>شماره پرونده<input name="caseNo"></label><label>شماره بایگانی<input name="archiveNo"></label><label>شماره دادنامه<input name="judgmentNo"></label>
  <label>شعبه<input name="branch"></label><label>مجتمع/مرجع<input name="court"></label><label>نوع پرونده<select name="type"><option>حقوقی</option><option>کیفری</option><option>خانواده</option><option>اجرای احکام</option><option>ثبتی</option><option>داوری</option><option>دیوان</option><option>سایر</option></select></label>
  <label>سمت موکل<input name="clientRole" placeholder="خواهان، خوانده، شاکی..."></label><label>طرف مقابل<input name="opponent"></label><label>وکیل طرف مقابل<input name="opponentLawyer"></label>
- <label>تاریخ تشکیل<input name="filingDate" placeholder="1405/06/20"></label><label>وضعیت<select name="status"><option>فعال</option><option>در انتظار</option><option>کارشناسی</option><option>تجدیدنظر</option><option>اجرای حکم</option><option>مختومه</option></select></label><label class="wide">مراحل مسیر پرونده<div class="meta">مراحل ۱ تا ۱۰ را همین‌جا تعریف کنید.</div><div class="actions"><button type="button" class="secondary" onclick="applyCivilStagePreset()">⚖️ الگوی کامل حقوقی</button></div><div class="form-grid"><label>مرحله ۱<input name="stage1" placeholder="عنوان مرحله"></label><label>شماره بایگانی مرحله ۱<input name="stageArchive1" placeholder="شماره بایگانی"></label><label>مرحله ۲<input name="stage2" placeholder="عنوان مرحله"></label><label>شماره بایگانی مرحله ۲<input name="stageArchive2" placeholder="شماره بایگانی"></label><label>مرحله ۳<input name="stage3" placeholder="عنوان مرحله"></label><label>شماره بایگانی مرحله ۳<input name="stageArchive3" placeholder="شماره بایگانی"></label><label>مرحله ۴<input name="stage4" placeholder="عنوان مرحله"></label><label>شماره بایگانی مرحله ۴<input name="stageArchive4" placeholder="شماره بایگانی"></label><label>مرحله ۵<input name="stage5" placeholder="عنوان مرحله"></label><label>شماره بایگانی مرحله ۵<input name="stageArchive5" placeholder="شماره بایگانی"></label><label>مرحله ۶<input name="stage6" placeholder="عنوان مرحله"></label><label>شماره بایگانی مرحله ۶<input name="stageArchive6" placeholder="شماره بایگانی"></label><label>مرحله ۷<input name="stage7" placeholder="عنوان مرحله"></label><label>شماره بایگانی مرحله ۷<input name="stageArchive7" placeholder="شماره بایگانی"></label><label>مرحله ۸<input name="stage8" placeholder="عنوان مرحله"></label><label>شماره بایگانی مرحله ۸<input name="stageArchive8" placeholder="شماره بایگانی"></label><label>مرحله ۹<input name="stage9" placeholder="عنوان مرحله"></label><label>شماره بایگانی مرحله ۹<input name="stageArchive9" placeholder="شماره بایگانی"></label><label>مرحله ۱۰<input name="stage10" placeholder="عنوان مرحله"></label><label>شماره بایگانی مرحله ۱۰<input name="stageArchive10" placeholder="شماره بایگانی"></label></div></label>
+ <label>تاریخ تشکیل<input name="filingDate" placeholder="1405/06/20"></label><label>وضعیت<select name="status"><option>فعال</option><option>در انتظار</option><option>کارشناسی</option><option>تجدیدنظر</option><option>اجرای حکم</option><option>مختومه</option></select></label><label class="wide">مراحل مسیر پرونده<div class="meta">مراحل ۱ تا ۱۰ را همین‌جا تعریف کنید.</div><div class="actions"><button type="button" class="secondary" onclick="applyCivilStagePreset()">⚖️ الگوی کامل حقوقی</button></div><div class="form-grid"><label>مرحله ۱<input name="stage1" placeholder="عنوان مرحله"></label><label>شماره بایگانی مرحله ۱<input name="stageArchive1" placeholder="شماره بایگانی"></label><div class="stage-form-tools"><button type="button" class="secondary" onclick="openStageFolderMenuByOrder(1)">📁 پرونده مرحله ۱</button><small>مدارک، ابلاغیه، دادنامه، لوایح و تصمیمات</small></div><label>مرحله ۲<input name="stage2" placeholder="عنوان مرحله"></label><label>شماره بایگانی مرحله ۲<input name="stageArchive2" placeholder="شماره بایگانی"></label><div class="stage-form-tools"><button type="button" class="secondary" onclick="openStageFolderMenuByOrder(2)">📁 پرونده مرحله ۲</button><small>مدارک، ابلاغیه، دادنامه، لوایح و تصمیمات</small></div><label>مرحله ۳<input name="stage3" placeholder="عنوان مرحله"></label><label>شماره بایگانی مرحله ۳<input name="stageArchive3" placeholder="شماره بایگانی"></label><div class="stage-form-tools"><button type="button" class="secondary" onclick="openStageFolderMenuByOrder(3)">📁 پرونده مرحله ۳</button><small>مدارک، ابلاغیه، دادنامه، لوایح و تصمیمات</small></div><label>مرحله ۴<input name="stage4" placeholder="عنوان مرحله"></label><label>شماره بایگانی مرحله ۴<input name="stageArchive4" placeholder="شماره بایگانی"></label><div class="stage-form-tools"><button type="button" class="secondary" onclick="openStageFolderMenuByOrder(4)">📁 پرونده مرحله ۴</button><small>مدارک، ابلاغیه، دادنامه، لوایح و تصمیمات</small></div><label>مرحله ۵<input name="stage5" placeholder="عنوان مرحله"></label><label>شماره بایگانی مرحله ۵<input name="stageArchive5" placeholder="شماره بایگانی"></label><div class="stage-form-tools"><button type="button" class="secondary" onclick="openStageFolderMenuByOrder(5)">📁 پرونده مرحله ۵</button><small>مدارک، ابلاغیه، دادنامه، لوایح و تصمیمات</small></div><label>مرحله ۶<input name="stage6" placeholder="عنوان مرحله"></label><label>شماره بایگانی مرحله ۶<input name="stageArchive6" placeholder="شماره بایگانی"></label><div class="stage-form-tools"><button type="button" class="secondary" onclick="openStageFolderMenuByOrder(6)">📁 پرونده مرحله ۶</button><small>مدارک، ابلاغیه، دادنامه، لوایح و تصمیمات</small></div><label>مرحله ۷<input name="stage7" placeholder="عنوان مرحله"></label><label>شماره بایگانی مرحله ۷<input name="stageArchive7" placeholder="شماره بایگانی"></label><div class="stage-form-tools"><button type="button" class="secondary" onclick="openStageFolderMenuByOrder(7)">📁 پرونده مرحله ۷</button><small>مدارک، ابلاغیه، دادنامه، لوایح و تصمیمات</small></div><label>مرحله ۸<input name="stage8" placeholder="عنوان مرحله"></label><label>شماره بایگانی مرحله ۸<input name="stageArchive8" placeholder="شماره بایگانی"></label><div class="stage-form-tools"><button type="button" class="secondary" onclick="openStageFolderMenuByOrder(8)">📁 پرونده مرحله ۸</button><small>مدارک، ابلاغیه، دادنامه، لوایح و تصمیمات</small></div><label>مرحله ۹<input name="stage9" placeholder="عنوان مرحله"></label><label>شماره بایگانی مرحله ۹<input name="stageArchive9" placeholder="شماره بایگانی"></label><div class="stage-form-tools"><button type="button" class="secondary" onclick="openStageFolderMenuByOrder(9)">📁 پرونده مرحله ۹</button><small>مدارک، ابلاغیه، دادنامه، لوایح و تصمیمات</small></div><label>مرحله ۱۰<input name="stage10" placeholder="عنوان مرحله"></label><label>شماره بایگانی مرحله ۱۰<input name="stageArchive10" placeholder="شماره بایگانی"></label><div class="stage-form-tools"><button type="button" class="secondary" onclick="openStageFolderMenuByOrder(10)">📁 پرونده مرحله ۱۰</button><small>مدارک، ابلاغیه، دادنامه، لوایح و تصمیمات</small></div></div></label>
  <label class="wide">اقدام بعدی<input name="nextAction"></label><label class="wide">شرح/یادداشت<textarea name="notes"></textarea></label>
  <div class="wide actions"><button class="primary">ذخیره پرونده</button><button type="button" class="secondary" onclick="resetForm('casesForm')">انصراف</button></div></form></div>
  <div class="panel"><div class="filterbar"><input id="casesQ" placeholder="جست‌وجو..." oninput="renderCases()"><select id="caseStatusFilter" onchange="renderCases()"><option value="">همه وضعیت‌ها</option><option>فعال</option><option>در انتظار</option><option>کارشناسی</option><option>تجدیدنظر</option><option>اجرای حکم</option><option>مختومه</option></select></div><div id="casesList" class="list"></div></div>`;
@@ -3200,6 +3201,19 @@ async function advanceFromEvent(eventId){
  else if(['اعاده دادرسی','بدوی','واخواهی'].includes(stage.stage_type)&&ev.event_type==='اجرای حکم')suggested='اجرای احکام';
  const next=prompt('عنوان مرحله بعدی:',suggested);if(!next)return;
  try{const {data,error}=await sb.rpc('advance_case_stage',{p_stage_id:stage.id,p_next_type:next,p_next_title:next});if(error)throw error;await loadCasePath(currentPathCaseId);toast('مرحله قبلی بسته و مرحله بعد ایجاد شد')}catch(e){console.error(e);toast('ایجاد مرحله بعد انجام نشد')}
+}
+async function openStageFolderMenuByOrder(order){
+ const form=document.getElementById('casesForm'),caseId=form?.elements?.editId?.value||'';
+ if(!caseId){toast('ابتدا پرونده را ذخیره کنید؛ سپس پوشه مرحله فعال می‌شود.');return}
+ try{
+  const {data,error}=await sb.from('case_stages').select('id,title,stage_order,archive_number').eq('case_id',caseId).eq('stage_order',order).maybeSingle();
+  if(error)throw error;if(!data){toast('ابتدا عنوان این مرحله را وارد و پرونده را ذخیره کنید.');return}
+  const folders=['مدارک و مستندات','ابلاغیه‌ها','دادنامه‌ها و آراء','لوایح','قرارها و تصمیمات','کارشناسی','جلسات و صورتجلسات','اجرائیات','مکاتبات','سایر'];
+  let m=document.getElementById('stageFolderPicker');
+  if(!m){m=document.createElement('div');m.id='stageFolderPicker';m.className='modal hidden';document.body.appendChild(m)}
+  m.innerHTML=`<div class="modal-card"><h3>📁 پرونده مرحله ${order}: ${esc(data.title||'')}</h3><div class="meta">شماره بایگانی: ${esc(data.archive_number||'—')}</div><div class="stage-folders">${folders.map(x=>`<button class="stage-folder" onclick="document.getElementById('stageFolderPicker').classList.add('hidden');openStageFolder('${data.id}','${x}')">📁<b>${x}</b><small>مشاهده / افزودن</small></button>`).join('')}</div><div class="actions"><button class="secondary" onclick="document.getElementById('stageFolderPicker').classList.add('hidden')">بستن</button></div></div>`;
+  m.classList.remove('hidden');
+ }catch(e){console.error(e);toast('باز کردن پرونده مرحله انجام نشد')}
 }
 function openStageFolder(stageId,folderType){
  const stage=caseStagesCache.find(x=>x.id===stageId);
@@ -3775,7 +3789,7 @@ function j2d(jy,jm,jd){let r=jalCal(jy);return g2d(r.gy,3,r.march)+(jm-1)*31-div
 function jalaliToGregorian(s){try{let p=s.replace(/-/g,'/').split('/').map(Number);if(p.length<3||!p[0])return null;return d2g(j2d(p[0],p[1],p[2]))}catch(e){return null}}
 function daysUntilJalali(s){let g=jalaliToGregorian(s);if(!g)return null;let target=new Date(g.gy,g.gm-1,g.gd),now=new Date();now.setHours(0,0,0,0);return Math.round((target-now)/86400000)}
 
-const APP_VERSION='8.2.1';
+const APP_VERSION='8.2.2';
 const APP_BUILD_ID='20261003-795';
 let appUpdateRegistration=null;
 let appUpdateReloading=false;

@@ -7,7 +7,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#172433">
-<title>سامانه جامع مدیریت موسسه حقوقی - نسخه 8.2.2 • Build 20261003-795</title>
+<title>سامانه جامع مدیریت موسسه حقوقی - نسخه 8.2.3 • Build 20261003-795</title>
 <style>
 
 :root{--bg:#f4f6f8;--card:#fff;--text:#1b2733;--muted:#6a7886;--primary:#155fa0;--primary2:#0e4d83;--danger:#b42318;--ok:#18794e;--warn:#9a6700;--line:#e1e7ec;--header-bg:#172433;--nav-bg:#22364b}
@@ -3217,9 +3217,10 @@ async function openStageFolderMenuByOrder(order){
 }
 function openStageFolder(stageId,folderType){
  const stage=caseStagesCache.find(x=>x.id===stageId);
- window._documentStageLink={stageId,eventId:'',caseId:stage?.case_id||currentPathCaseId||'',folderType};
+ const caseId=stage?.case_id||currentPathCaseId||'';
+ window._documentStageLink={stageId,eventId:'',caseId,folderType};
  showView('documents');
- setTimeout(()=>{const c=document.getElementById('docCase');if(c&&window._documentStageLink.caseId)c.value=window._documentStageLink.caseId;const st=document.getElementById('docFileStatus');if(st)st.textContent='📁 پوشه '+folderType+' — سند جدید در همین پوشه مرحله ذخیره می‌شود.';renderDocuments()},60);
+ setTimeout(()=>{renderDocuments();const c=document.getElementById('docCase');if(c&&caseId)c.value=caseId;const cf=document.getElementById('docCaseFilter');if(cf&&caseId)cf.value=caseId;const st=document.getElementById('docFileStatus');if(st)st.textContent='📁 '+folderType+' — فایل را انتخاب و دکمه بارگذاری سند را بزنید.';const inp=document.getElementById('docFileDocs');if(inp)inp.scrollIntoView({block:'center',behavior:'smooth'});},100);
 }
 function openDocumentsForStage(stageId,eventId){
  const stage=caseStagesCache.find(x=>x.id===stageId);
@@ -3638,7 +3639,7 @@ async function saveDocument(e){
   if(!token)throw new Error('نشست کاربری معتبر نیست');
   const f=formData(e.target),fd=new FormData();
   fd.append('file',file);fd.append('title',f.title||file.name);fd.append('category',f.category||'سایر');
-  if(f.clientId)fd.append('client_id',f.clientId);const uploadCaseId=f.caseId||window._documentStageLink?.caseId||'';if(uploadCaseId)fd.append('case_id',uploadCaseId);if(f.notes)fd.append('notes',f.notes);if(window._documentStageLink?.stageId)fd.append('stage_id',window._documentStageLink.stageId);if(window._documentStageLink?.eventId)fd.append('stage_event_id',window._documentStageLink.eventId);if(window._documentStageLink?.folderType)fd.append('folder_type',window._documentStageLink.folderType);if(window._documentStageLink?.intake)fd.append('intake_document','true');if(window._documentStageLink?.sourceSystem)fd.append('source_system',window._documentStageLink.sourceSystem);if(window._documentStageLink?.sourceType)fd.append('source_type',window._documentStageLink.sourceType);
+  if(window._documentStageLink?.clientId||f.clientId)fd.append('client_id',window._documentStageLink?.clientId||f.clientId);const uploadCaseId=window._documentStageLink?.caseId||f.caseId||'';if(uploadCaseId)fd.append('case_id',uploadCaseId);if(f.notes)fd.append('notes',f.notes);if(window._documentStageLink?.stageId)fd.append('stage_id',window._documentStageLink.stageId);if(window._documentStageLink?.eventId)fd.append('stage_event_id',window._documentStageLink.eventId);if(window._documentStageLink?.folderType)fd.append('folder_type',window._documentStageLink.folderType);if(window._documentStageLink?.intake)fd.append('intake_document','true');if(window._documentStageLink?.sourceSystem)fd.append('source_system',window._documentStageLink.sourceSystem);if(window._documentStageLink?.sourceType)fd.append('source_type',window._documentStageLink.sourceType);
   say('۲/۳ — ارسال امن فایل به سرور…',45);
   const url=`${SUPABASE_URL}/functions/v1/document-upload`;
   const res=await fetch(url,{method:'POST',headers:{Authorization:`Bearer ${token}`,apikey:SUPABASE_ANON_KEY},body:fd});

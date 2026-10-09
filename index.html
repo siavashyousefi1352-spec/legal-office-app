@@ -780,7 +780,7 @@ body.bg-gradient-mint{background:linear-gradient(135deg,#ecfdf5,#ffffff 50%,#ecf
 }
 
 
-/* ===== v8.2.2 separate clock/calendar/countdown + settings preview ===== */
+/* ===== v8.2.3 separate clock/calendar/countdown + settings preview ===== */
 .clock-style-digital .analog-clock{display:none}
 .clock-style-digital{justify-content:center;text-align:center}
 .clock-style-digital .digital-clock{font-size:48px}
@@ -842,7 +842,7 @@ body.bg-gradient-mint{background:linear-gradient(135deg,#ecfdf5,#ffffff 50%,#ecf
 .preview-style-colorful .preview-launcher span:nth-child(3n){background:#ddd6fe}
 
 
-/* ===== v8.2.2 separate personal/institute profiles ===== */
+/* ===== v8.2.3 separate personal/institute profiles ===== */
 .personal-profile-card{
   --profile-accent:#2563eb;
   border:1px solid color-mix(in srgb,var(--profile-accent) 26%,var(--line));
@@ -892,7 +892,7 @@ body.bg-gradient-mint{background:linear-gradient(135deg,#ecfdf5,#ffffff 50%,#ecf
 }
 
 
-/* ===== v8.2.2 header: institute center + personal profile right ===== */
+/* ===== v8.2.3 header: institute center + personal profile right ===== */
 header{
   display:grid!important;
   grid-template-columns:minmax(210px,1fr) minmax(280px,1.4fr) minmax(240px,1fr);
@@ -975,14 +975,14 @@ header .profile-strip{display:none!important}
 }
 
 
-/* ===== v8.2.2 work notebook + import center ===== */
+/* ===== v8.2.3 work notebook + import center ===== */
 .workbook-toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.workbook-toolbar input{flex:1;min-width:190px}
 .workbook-breadcrumb{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin:8px 0}.workbook-breadcrumb button{border:0;background:#eef2f6;border-radius:999px;padding:6px 10px;cursor:pointer}
 .workbook-folder-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}.workbook-folder{--folder-color:#2563eb;position:relative;border:0;border-radius:18px;padding:13px;min-height:115px;color:#fff;background:linear-gradient(145deg,color-mix(in srgb,var(--folder-color) 90%,#fff 10%),color-mix(in srgb,var(--folder-color) 72%,#111827 28%));box-shadow:0 10px 24px color-mix(in srgb,var(--folder-color) 24%,transparent);cursor:pointer;text-align:right}.workbook-folder .folder-icon{font-size:28px;display:block;margin-bottom:9px}.workbook-folder .folder-name{font-weight:900;font-size:14px}.workbook-folder .folder-meta{font-size:10px;opacity:.85;margin-top:5px}.workbook-folder .folder-actions{position:absolute;left:8px;top:8px;display:flex;gap:4px}.workbook-folder .folder-actions button{border:1px solid #ffffff38;background:#ffffff1d;color:#fff;border-radius:8px;padding:4px 6px;cursor:pointer}
 .workbook-note-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin-top:10px}.workbook-note{--note-color:#ffffff;border:1px solid var(--line);border-radius:16px;padding:12px;background:var(--note-color);box-shadow:0 3px 12px #0000000c;min-height:150px;position:relative}.workbook-note.pinned::before{content:'📌';position:absolute;left:9px;top:8px}.workbook-note .note-title{font-weight:900;font-size:14px;padding-left:26px}.workbook-note .note-body{white-space:pre-wrap;line-height:1.95;font-size:12px;margin-top:8px;max-height:220px;overflow:auto}.workbook-note .note-meta{font-size:10px;color:var(--muted);margin-top:8px}.workbook-note .note-actions{display:flex;gap:5px;flex-wrap:wrap;margin-top:9px}.workbook-note .note-actions button{padding:6px 8px;font-size:10px}.workbook-empty{padding:24px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:14px}.workbook-split{display:grid;grid-template-columns:1fr;gap:12px}.import-drop{border:2px dashed #b9c7d4;border-radius:14px;padding:14px;text-align:center;background:#f8fbfd}.import-files{display:grid;gap:6px;margin-top:8px}.import-file-item{display:flex;justify-content:space-between;gap:8px;padding:7px;border:1px solid var(--line);border-radius:10px;background:#fff}.workbook-badge{display:inline-flex;border-radius:999px;padding:3px 7px;font-size:9px;background:#eef2ff;color:#4338ca;margin-left:4px}@media(min-width:880px){.workbook-split{grid-template-columns:1.15fr .85fr}}
 
 
-/* ===== v8.2.2 automatic app updater ===== */
+/* ===== v8.2.3 automatic app updater ===== */
 #appUpdateBanner{position:fixed;left:12px;right:12px;bottom:12px;z-index:10050;display:none;align-items:center;justify-content:space-between;gap:10px;background:#0f172a;color:#fff;border:1px solid #ffffff2c;border-radius:16px;padding:11px 13px;box-shadow:0 18px 45px #0005}
 #appUpdateBanner.show{display:flex}
 #appUpdateBanner .update-copy{min-width:0}.update-title{font-weight:900}.update-meta{font-size:11px;opacity:.8;margin-top:3px}
@@ -993,7 +993,7 @@ header .profile-strip{display:none!important}
 @media(max-width:560px){#appUpdateBanner{align-items:flex-start;flex-direction:column}#appUpdateBanner .actions{width:100%}#appUpdateBanner button{flex:1}}
 
 
-/* v8.2.2 hearings and remote update */
+/* v8.2.3 hearings and remote update */
 .hearing-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px}.hearing-card{border:1px solid var(--line);border-radius:16px;padding:12px;background:var(--card)}.hearing-card.held{background:#f0fdf4;border-color:#86efac}.hearing-meta{font-size:11px;color:var(--muted);line-height:1.9;margin-top:5px}.sms-alert-row{display:grid;grid-template-columns:1fr 1fr auto;gap:6px;margin-top:6px}.remote-user-card{border:1px solid var(--line);border-radius:14px;padding:10px;margin-top:8px}.remote-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:7px}.release-box{background:#f2f9ff;border:1px solid #cfe5f8;border-radius:12px;padding:10px}.hearing-result-form{border-top:1px dashed var(--line);margin-top:9px;padding-top:9px}@media(max-width:600px){.sms-alert-row{grid-template-columns:1fr}}
 
 .check-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:6px;margin-top:7px}.check-grid label{display:flex;gap:7px;align-items:center;border:1px solid var(--line);border-radius:10px;padding:7px;background:var(--card)}.check-grid input{width:auto}
@@ -1028,7 +1028,7 @@ window.addEventListener('error',function(ev){
 <body>
 <div id="appUpdateBanner"><div class="update-copy"><div class="update-title">نسخه جدید برنامه آماده است</div><div id="appUpdateMeta" class="update-meta">برای دریافت آخرین نسخه، به‌روزرسانی را بزنید.</div></div><div class="actions"><button class="update-now" onclick="applyAppUpdate()">به‌روزرسانی الآن</button><button class="update-later" onclick="hideAppUpdateBanner()">بعداً</button></div></div>
 <div id="toast"></div>
-<div style="position:fixed;left:8px;top:8px;z-index:999;background:#ffffffdd;border:1px solid #dbe3ea;border-radius:999px;padding:5px 9px;font:11px Tahoma;color:#405060">نسخه 8.2.2 کارت‌های پیشرفته و رنگ‌های پیش‌فرض</div>
+<div style="position:fixed;left:8px;top:8px;z-index:999;background:#ffffffdd;border:1px solid #dbe3ea;border-radius:999px;padding:5px 9px;font:11px Tahoma;color:#405060">نسخه 8.2.3 کارت‌های پیشرفته و رنگ‌های پیش‌فرض</div>
 
 <section id="loginScreen" class="login-screen">
   <div class="login-card">
@@ -1421,7 +1421,7 @@ window.addEventListener('error',function(ev){
   </div>
 </section>
 
-<section id="users" class="view"><div id="remoteDeviceAdminPanel" class="panel hidden"><h3>📲 مدیریت کاربران و دستگاه‌ها</h3><div class="note-blue">مدیر می‌تواند برای دستگاه کاربر فرمان به‌روزرسانی یا بازیابی بفرستد. کاربر پس از نصب اولیه، برنامه را از آیکون خودش باز می‌کند.</div><div class="release-box"><b>نسخه مرکزی: <span id="serverReleaseVersion">8.2.2</span></b><div class="actions"><button class="primary" onclick="forceUpdateAllUsers()">به‌روزرسانی همه کاربران</button></div></div><div id="remoteUsersList"></div></div>
+<section id="users" class="view"><div id="remoteDeviceAdminPanel" class="panel hidden"><h3>📲 مدیریت کاربران و دستگاه‌ها</h3><div class="note-blue">مدیر می‌تواند برای دستگاه کاربر فرمان به‌روزرسانی یا بازیابی بفرستد. کاربر پس از نصب اولیه، برنامه را از آیکون خودش باز می‌کند.</div><div class="release-box"><b>نسخه مرکزی: <span id="serverReleaseVersion">8.2.3</span></b><div class="actions"><button class="primary" onclick="forceUpdateAllUsers()">به‌روزرسانی همه کاربران</button></div></div><div id="remoteUsersList"></div></div>
   <div class="section-head"><h2>کاربران موسسه</h2><button class="secondary" onclick="renderUsers()">↻</button></div>
   <div class="note-blue">کاربران از Supabase Authentication خوانده می‌شوند. مدیر می‌تواند تنظیمات هشدار و عکس پروفایل هر کاربر را مدیریت کند؛ هر کاربر عادی فقط اطلاعات و هشدارهای خودش را می‌بیند.</div>
   <div class="panel"><div id="userList" class="list"></div></div>
@@ -1659,7 +1659,7 @@ window.addEventListener('error',function(ev){
   </div>
   <div class="panel">
     <h3>🔄 به‌روزرسانی برنامه</h3>
-    <div class="note-blue">نسخه فعلی: <b>8.2.2</b>. از این نسخه به بعد، برنامه خودش نسخه جدید را بررسی می‌کند و دیگر لازم نیست برنامه را حذف و دوباره نصب کنید.</div>
+    <div class="note-blue">نسخه فعلی: <b>8.2.3</b>. از این نسخه به بعد، برنامه خودش نسخه جدید را بررسی می‌کند و دیگر لازم نیست برنامه را حذف و دوباره نصب کنید.</div>
     <div class="actions" style="margin-top:10px"><button type="button" class="primary" onclick="checkForAppUpdate(true)">بررسی نسخه جدید</button><button type="button" class="secondary" onclick="hardRefreshApp()">دریافت اجباری آخرین نسخه</button></div>
   </div>
 
@@ -3215,12 +3215,23 @@ async function openStageFolderMenuByOrder(order){
   m.classList.remove('hidden');
  }catch(e){console.error(e);toast('باز کردن پرونده مرحله انجام نشد')}
 }
-function openStageFolder(stageId,folderType){
- const stage=caseStagesCache.find(x=>x.id===stageId);
- const caseId=stage?.case_id||currentPathCaseId||'';
- window._documentStageLink={stageId,eventId:'',caseId,folderType};
- showView('documents');
- setTimeout(()=>{renderDocuments();const c=document.getElementById('docCase');if(c&&caseId)c.value=caseId;const cf=document.getElementById('docCaseFilter');if(cf&&caseId)cf.value=caseId;const st=document.getElementById('docFileStatus');if(st)st.textContent='📁 '+folderType+' — فایل را انتخاب و دکمه بارگذاری سند را بزنید.';const inp=document.getElementById('docFileDocs');if(inp)inp.scrollIntoView({block:'center',behavior:'smooth'});},100);
+async function openStageFolder(stageId,folderType){
+ try{
+  const {data:stage,error}=await sb.from('case_stages').select('id,case_id,title').eq('id',stageId).single();
+  if(error||!stage)throw error||new Error('مرحله پیدا نشد');
+  const c=(state.cases||[]).find(x=>String(x.id)===String(stage.case_id));
+  window._documentStageLink={stageId:stage.id,eventId:'',caseId:stage.case_id,clientId:c?.clientId||'',folderType};
+  selectedDocumentFile=null;
+  showView('documents');
+  setTimeout(()=>{
+   const cs=document.getElementById('docCase');if(cs)cs.value=stage.case_id;
+   const cl=document.getElementById('docClient');if(cl&&c?.clientId)cl.value=c.clientId;
+   const filter=document.getElementById('docCaseFilter');if(filter)filter.value=stage.case_id;
+   const status=document.getElementById('docFileStatus');if(status)status.textContent='📁 '+folderType+' / '+(stage.title||'مرحله')+' — فایل را انتخاب و بارگذاری سند را بزنید.';
+   const form=document.getElementById('documentsForm');if(form)form.scrollIntoView({block:'start',behavior:'smooth'});
+   renderDocuments();
+  },120);
+ }catch(e){console.error(e);toast('پوشه مرحله باز نشد: '+(e?.message||''))}
 }
 function openDocumentsForStage(stageId,eventId){
  const stage=caseStagesCache.find(x=>x.id===stageId);
@@ -3790,7 +3801,7 @@ function j2d(jy,jm,jd){let r=jalCal(jy);return g2d(r.gy,3,r.march)+(jm-1)*31-div
 function jalaliToGregorian(s){try{let p=s.replace(/-/g,'/').split('/').map(Number);if(p.length<3||!p[0])return null;return d2g(j2d(p[0],p[1],p[2]))}catch(e){return null}}
 function daysUntilJalali(s){let g=jalaliToGregorian(s);if(!g)return null;let target=new Date(g.gy,g.gm-1,g.gd),now=new Date();now.setHours(0,0,0,0);return Math.round((target-now)/86400000)}
 
-const APP_VERSION='8.2.2';
+const APP_VERSION='8.2.3';
 const APP_BUILD_ID='20261003-795';
 let appUpdateRegistration=null;
 let appUpdateReloading=false;

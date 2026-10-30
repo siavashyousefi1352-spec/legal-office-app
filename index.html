@@ -2150,7 +2150,28 @@ function avatarUrl(path,dataUrl){
   return u+(u.includes('?')?'&':'?')+'v='+encodeURIComponent(path);
 }
 function instituteAssetUrl(path){if(!path)return '';return sb.storage.from('institute-assets').getPublicUrl(path).data.publicUrl}
-function personalAssetUrl(path){if(!path)return '';return sb.storage.from('profile-avatars').getPublicUrl(path).data.publicUrl}
+const SIGNATURE_BUCKET='profile-signatures';
+const SIGNATURE_TTL=60;
+let signatureBusy=false,signaturePreviewTimer=null,signaturePreviewGeneration=0;
+// References include the bucket; legacy public files must be migrated by an operator.
+function signatureObjectPath(reference,userId){
+  const prefix=SIGNATURE_BUCKET+'/'+userId+'/';
+  if(typeof reference!=='string'||!reference.startsWith(prefix))throw new Error('invalid_signature_reference');
+  const path=reference.slice(SIGNATURE_BUCKET.length+1);
+  if(!/^[0-9a-f-]+\/signature-[0-9a-f-]+\.(png|jpg|webp)$/.test(path))throw new Error('invalid_signature_path');
+  return path;
+}
+async function personalAssetUrl(reference,userId){
+  const path=signatureObjectPath(reference,userId);
+  const {data,error}=await sb.storage.from(SIGNATURE_BUCKET).createSignedUrl(path,SIGNATURE_TTL);
+  if(error||!data?.signedUrl)throw new Error('signature_unavailable');
+  return data.signedUrl;
+}
+function clearSignaturePreview(){
+  signaturePreviewGeneration++;
+  clearTimeout(signaturePreviewTimer);
+  document.getElementById('signaturePreview')?.replaceChildren();
+}
 async function getCloudProfile(){
   const {data:{user}}=await sb.auth.getUser(); if(!user)return null;
   const {data,error}=await sb.from('profiles').select('*').eq('id',user.id).single();
@@ -2213,10 +2234,27 @@ async function refreshProfileUI(){
   previewPersonalProfileTheme();
 
   const sig=document.getElementById('signaturePreview');
+  clearSignaturePreview();
   if(sig){
-    if(cloudProfile.signature_path){
-      sig.innerHTML=`<img src="${personalAssetUrl(cloudProfile.signature_path)}" alt="signature">`;
-    }else sig.innerHTML='<span class="meta">امضایی ثبت نشده است.</span>';
+    const owner=cloudProfile.id,reference=cloudProfile.signature_path,generation=signaturePreviewGeneration;
+    sig.textContent=reference?'در حال دریافت امضا…':'امضایی ثبت نشده است.';
+    if(reference){
+      try{
+        const url=await personalAssetUrl(reference,owner);
+        // A logout, deletion or another render may occur while signing is in flight.
+        if(generation===signaturePreviewGeneration&&cloudProfile?.id===owner&&cloudProfile.signature_path===reference){
+          const img=document.createElement('img');img.alt='امضای شخصی';img.referrerPolicy='no-referrer';img.src=url;
+          sig.replaceChildren(img);
+          signaturePreviewTimer=setTimeout(()=>{
+            sig.replaceChildren();
+            if(cloudProfile?.id===owner){
+              const button=document.createElement('button');button.type='button';button.textContent='نمایش مجدد امضا';
+              button.onclick=()=>refreshProfileUI();sig.append(button);
+            }
+          },SIGNATURE_TTL*1000);
+        }
+      }catch{if(generation===signaturePreviewGeneration&&cloudProfile?.id===owner&&cloudProfile.signature_path===reference)sig.textContent='دریافت امن امضا ممکن نشد؛ تنظیمات ذخیره‌سازی بررسی شود.'}
+    }
   }
 
   // Institute profile preview
@@ -2279,7 +2317,7 @@ async function saveMyPersonalProfile(e){
       p_bio:(document.getElementById('myProfileBio')?.value||'').trim(),
       p_phone:(document.getElementById('myProfilePhone')?.value||'').trim(),
       p_profile_theme:document.getElementById('myProfileTheme')?.value||'navy',
-      p_signature_path:cloudProfile.signature_path||null
+      p_signature_path:null // Signature changes use set_my_signature exclusively.
     };
     const {data,error}=await sb.rpc('update_my_personal_profile',payload);
     if(error)throw error;
@@ -2297,25 +2335,46 @@ async function saveMyPersonalProfile(e){
 }
 
 async function uploadMySignature(file){
-  if(!file)return;
+  if(!file||!cloudProfile||signatureBusy)return;
+  const types={'image/png':'png','image/jpeg':'jpg','image/webp':'webp'};
+  if(!types[file.type]){toast('فقط تصویر PNG، JPEG یا WebP مجاز است');return}
   if(file.size>5*1024*1024){toast('حجم تصویر امضا حداکثر ۵ مگابایت باشد');return}
+  signatureBusy=true;
+  const owner=cloudProfile.id;
+  const path=`${owner}/signature-${crypto.randomUUID()}.${types[file.type]}`;
   try{
-    const ext=(file.name.split('.').pop()||'png').replace(/[^a-zA-Z0-9]/g,'').toLowerCase();
-    const path=`${cloudProfile.id}/signature-${Date.now()}.${ext}`;
-    const {error:upErr}=await sb.storage.from('profile-avatars').upload(path,file,{upsert:true,contentType:file.type||'image/png'});
+    const {data:{user},error:authError}=await sb.auth.getUser();
+    if(authError||user?.id!==owner)throw new Error('signature_session_changed');
+    const {error:upErr}=await sb.storage.from(SIGNATURE_BUCKET).upload(path,file,{upsert:false,contentType:file.type,cacheControl:'0'});
     if(upErr)throw upErr;
-    const {error}=await sb.rpc('set_my_signature',{p_signature_path:path});
+    // Preserve the uploaded file on an ambiguous RPC/network failure: it may be committed.
+    const {error}=await sb.rpc('set_my_signature',{p_signature_path:SIGNATURE_BUCKET+'/'+path});
     if(error)throw error;
-    cloudProfile.signature_path=path;
-    await refreshProfileUI();
+    if(cloudProfile?.id===owner){cloudProfile.signature_path=SIGNATURE_BUCKET+'/'+path;await refreshProfileUI()}
     toast('امضای شخصی ذخیره شد');
-  }catch(err){console.error(err);toast('ذخیره امضا انجام نشد')}
+    // Previous images are retained privately for deliberate, audited cleanup.
+  }catch{toast('ذخیره امضا تأیید نشد؛ پیش از تلاش مجدد پروفایل را تازه‌سازی کنید')}
+  finally{signatureBusy=false}
 }
 async function removeMySignature(){
+  if(!cloudProfile||signatureBusy)return;
+  signatureBusy=true;
+  const owner=cloudProfile.id,reference=cloudProfile.signature_path;
   try{
-    const {error}=await sb.rpc('set_my_signature',{p_signature_path:null});if(error)throw error;
-    cloudProfile.signature_path=null;await refreshProfileUI();toast('امضای شخصی حذف شد');
-  }catch(err){console.error(err);toast('حذف امضا انجام نشد')}
+    if(!reference)return;
+    const path=signatureObjectPath(reference,owner);
+    const {data:{user},error:authError}=await sb.auth.getUser();
+    if(authError||user?.id!==owner)throw new Error('signature_session_changed');
+    // Conditional RPC prevents a stale tab from unlinking a newer signature.
+    const {error}=await sb.rpc('clear_my_signature',{p_expected_path:reference});if(error)throw error;
+    if(cloudProfile?.id===owner){cloudProfile.signature_path=null;clearSignaturePreview()}
+    const {data,error:deleteError}=await sb.storage.from(SIGNATURE_BUCKET).remove([path]);
+    if(deleteError||!data?.some(object=>object.name===path)){
+      toast('ارتباط امضا حذف شد؛ پاک‌سازی فایل تأیید نشد و باید توسط مدیر پیگیری شود');
+    }else toast('امضا و فایل آن حذف شد');
+    if(cloudProfile?.id===owner)await refreshProfileUI();
+  }catch{toast('حذف امضا تأیید نشد؛ پروفایل را تازه‌سازی کنید')}
+  finally{signatureBusy=false}
 }
 
 
@@ -2832,7 +2891,7 @@ async function loginUser(username,password){
  if(hash!==u.passwordHash)return false;
  currentUser=u;sessionStorage.setItem(SESSION_KEY,u.id);return true;
 }
-async function logout(){try{await sb.auth.signOut()}catch(e){} currentUser=null;cloudProfile=null;document.getElementById('app').classList.add('hidden');document.getElementById('loginScreen').classList.remove('hidden')}
+async function logout(){clearSignaturePreview();try{await sb.auth.signOut()}catch(e){} currentUser=null;cloudProfile=null;document.getElementById('app').classList.add('hidden');document.getElementById('loginScreen').classList.remove('hidden')}
 
 document.getElementById('loginForm').addEventListener('submit',async e=>{
  e.preventDefault();let f=formData(e.target);const pg=document.getElementById('docUploadProgress');if(pg)pg.style.width='15%';const st=document.getElementById('docFileStatus');if(st)st.textContent='در حال ارسال فایل به بایگانی ابری…';
